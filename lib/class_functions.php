@@ -9,35 +9,6 @@ setlocale( LC_MONETARY, 'en_US' );
 class WPI_Functions {
 
   /**
-   * PHP function to echoing a message to JS console
-   * Ported from WP-Property
-   *
-   * @since 3.0.3
-   */
-  static function console_log( $text = false ) {
-    global $wpi_settings;
-
-    if ( isset( $wpi_settings[ 'developer_mode' ] ) && $wpi_settings[ 'developer_mode' ] != 'true' ) {
-      return;
-    }
-
-    if ( empty( $text ) ) {
-      return;
-    }
-
-    if ( is_array( $text ) || is_object( $text ) ) {
-      $text = str_replace( "\n", '', print_r( $text, true ) );
-    }
-
-    //** Cannot use quotes */
-      WPI_Create_Functions::$echo_text = str_replace( '"', '-', $text );
-
-    add_filter( 'wp_footer', array( 'WPI_Create_Functions', 'footer_log' ) );
-    add_filter( 'admin_footer', array( 'WPI_Create_Functions', 'footer_log' ) );
-
-  }
-
-  /**
    * Function for performing a wpi_object search
    *
    * @since 3.0
@@ -747,10 +718,10 @@ class WPI_Functions {
       'after_tax' => $amount + ( $amount / 100 * $tax )
     );
 
-    if ( !empty( $charge_items ) ) {
+    if ( !empty( $charge_items ) && is_array( $charge_items ) ) {
       $charge_items[ ] = $new_item;
     } else {
-      $charge_items[ 0 ] = $new_item;
+      $charge_items = array( $new_item );
     }
 
     update_post_meta( $post_id, 'itemized_charges', $charge_items );
@@ -905,8 +876,7 @@ class WPI_Functions {
   static function print_messages() {
     global $wpi_messages;
 
-
-    if ( count( (array)$wpi_messages ) < 1 ) {
+    if ( empty( $wpi_messages ) ) {
       return;
     }
 
@@ -1104,6 +1074,7 @@ class WPI_Functions {
     if ( !is_array( $array ) ) {
       return false;
     }
+    $return = array();
     foreach ( $array as $key => $value ) {
       if ( !empty( $value ) ) {
         $return[ $key ] = $value;
@@ -2096,6 +2067,8 @@ class WPI_Functions {
    * @return array
    */
   static function wpi_crm_custom_notification( $current ) {
+
+    if ( !is_array( $current ) ) $current = array();
 
     foreach ( WPI_Core::$crm_notification_actions as $action_key => $action_name ) {
       $current[ $action_key ] = $action_name;

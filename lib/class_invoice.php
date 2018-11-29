@@ -22,6 +22,8 @@ class WPI_Invoice {
     global $wpdb;
     $data = wp_parse_args( $args, array() );
 
+    if ( !is_array( $this->data ) ) $this->data = array();
+
     foreach($data as $meta_key => $meta_value) {
       $this->data[$meta_key] = $meta_value;
     }
@@ -286,7 +288,7 @@ class WPI_Invoice {
 
     $invoice_data = $wpdb->get_row("SELECT * FROM {$wpdb->posts} WHERE ID = '$id'", ARRAY_A);
 
-    if($new_invoice || count($invoice_data) < 1) {
+    if( $new_invoice || empty($invoice_data) ) {
       $this->error = true;
       $this->new_invoice = true;
       return;

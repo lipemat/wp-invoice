@@ -26,10 +26,19 @@ abstract class wpi_gateway_base {
     $this->type = get_class($this);
     __('Customer Information', ud_get_wp_invoice()->domain);
     add_filter('sync_billing_update', array('wpi_gateway_base', 'sync_billing_filter'), 10, 3);
-    WPI_Create_Functions::$type = $this->type;
-    add_filter('wpi_recurring_settings', array( 'WPI_Create_Functions', 'gateways' ) );
+    add_filter('wpi_recurring_settings', array( $this, 'wpi_recurring_settings' ));
     add_action('wpi_recurring_settings_' . $this->type, array($this, 'recurring_settings'));
     add_action('wpi_payment_fields_' . $this->type, array($this, 'wpi_payment_fields'));
+  }
+
+  /**
+   * @param $gateways
+   * @return array
+   */
+  public function wpi_recurring_settings( $gateways ) {
+    if ( !is_array( $gateways ) ) $gateways = array();
+    $gateways[] = $this->type;
+    return $gateways;
   }
 
   /**
@@ -95,7 +104,7 @@ abstract class wpi_gateway_base {
       isset($wp_crm['data_structure']['attributes']['recaptcha']['wp_invoice']) &&
       $wp_crm['data_structure']['attributes']['recaptcha']['wp_invoice'] == 'true'
     ){
-      if(!isset($_REQUEST['cc_data']['recaptcha']) || !WP_CRM_F::reCaptchaVerify($_REQUEST['cc_data']['recaptcha'])){
+      if(!isset($_REQUEST['g-recaptcha-response']) || !WP_CRM_F::reCaptchaVerify($_REQUEST['g-recaptcha-response'])){
         //** Response */
         $response = array(
             'success' => false,
@@ -291,40 +300,37 @@ abstract class wpi_gateway_base {
     </style>
     <script type="text/javascript">
       var type = jQuery("#wpi_form_type").val();
-      if ( typeof type != 'undefined' ){
-        var type_messages = window[type + '_messages'];
-        var type_rules = window[type + '_rules'];
-
-        type_rules["<?php echo esc_attr( $field_data['name'] ); ?>"] = {
+      function crm_recaptcha_onload(argument) {
+        if ( typeof type != 'undefined' ){
+          var type_messages = window[type + '_messages'];
+          var type_rules = window[type + '_rules'];
+          type_rules["<?php echo esc_attr( $field_data['name'] ); ?>"] = {
             required: true
           };
-
-        type_messages["<?php echo esc_attr( $field_data['name'] ); ?>"] = {
+          type_messages["<?php echo esc_attr( $field_data['name'] ); ?>"] = {
             required: "Are you human? Please verify the captcha."
           };
-
-        function crm_recaptcha_onload(argument) {
-          jQuery('.crm-g-recaptcha').each(function(argument) {
-            var container = jQuery(this);
-            var formID = container.parents('form').attr('id');
-            var parameters = {
-              sitekey: container.data('sitekey'),
-              callback: function(response){
-                var input = jQuery('.crm-g-captcha-input', '#' + formID);
-                input.val(response);
-              },
-              'expired-callback': function(){
-                var input = jQuery('.crm-g-captcha-input', '#' + formID);
-                input.val('');
-              },
-            };
-            window[formID + '_recaptcha'] = grecaptcha.render(
+        }
+        jQuery('.crm-g-recaptcha').each(function(argument) {
+          var container = jQuery(this);
+          var formID = container.parents('form').attr('id');
+          var parameters = {
+            sitekey: container.data('sitekey'),
+            callback: function(response){
+              var input = jQuery('.crm-g-captcha-input', '#' + formID);
+              input.val(response);
+            },
+            'expired-callback': function(){
+              var input = jQuery('.crm-g-captcha-input', '#' + formID);
+              input.val('');
+            },
+          };
+          window[formID + '_recaptcha'] = grecaptcha.render(
               this,
               parameters
-            );
+          );
 
-          });
-        }
+        });
       }
     </script>
     <?php

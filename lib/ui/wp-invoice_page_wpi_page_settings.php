@@ -33,7 +33,7 @@ $wpi_settings_tabs = array(
         'callback' => array('WPI_Settings_page', 'help')
     ),
     'feedback' => array(
-        'label' => __('Feedback', ud_get_wp_invoice()->domain),
+        'label' => __('Support', ud_get_wp_invoice()->domain),
         'position' => 600,
         'callback' => function() {
           ?>
@@ -56,7 +56,9 @@ $wpi_settings_tabs = array(
 $wpi_settings_tabs = apply_filters('wpi_settings_tabs', $wpi_settings_tabs);
 
 //** Put the tabs into position */
-usort($wpi_settings_tabs, array( 'WPI_Create_Functions', 'position_sort'));
+usort($wpi_settings_tabs, function($a,$b){
+  return $a["position"] - $b["position"];
+});
 
 if (isset($_REQUEST['message'])) {
   switch ($_REQUEST['message']) {
@@ -198,7 +200,12 @@ class WPI_Settings_page {
       </tr>
       <tr>
         <th width="200"><?php _e("Business Phone", ud_get_wp_invoice()->domain) ?></th>
-        <td><?php echo WPI_UI::input("type=text&name=business_phone&group=wpi_settings&value={$wpi_settings['business_phone']}") ?> </td>
+        <td><?php echo WPI_UI::input(array(
+              'type'=>'text',
+              'name'=>'business_phone',
+              'group'=>'wpi_settings',
+              'value'=>$wpi_settings['business_phone']
+          )); ?> </td>
       </tr>
       <tr>
         <th width="200"><?php _e("Email Address", ud_get_wp_invoice()->domain) ?></th>

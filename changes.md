@@ -1,3 +1,16 @@
+#### 4.2.2 ( August 7, 2018 )
+* Fixed warnings related to PHP 7.*
+* Added Support tab
+* Updated FR localization
+
+#### 4.2.1 ( August 7, 2018 )
+* PHP 7.2 Compatibility fixes.
+
+#### 4.2.0 ( June 4, 2018 )
+* Improved Spanish and added French localization
+* Fixed PHP 7.2 Warnings
+* Fixed Stripe Gateway - recurring invoice processing issue related to API Upgrade
+
 #### 4.1.10 ( February 9, 2018 )
 * Fixed calculation of invoice total paid amount.
 * Fixed unnecessary SQL query on every page.

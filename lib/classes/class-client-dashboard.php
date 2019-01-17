@@ -69,7 +69,7 @@ namespace UsabilityDynamics\WPI {
         global $invoice;
 
         $invoice = $_invoice;
-        
+
         $invoice['cd_permalink'] = get_invoice_permalink( $invoice['ID'] );
         $invoice['cd_due_date']  = wpi_get_invoice_due_date( 'm/d/Y' );
         $invoice['cd_invoice_id'] = invoice_id( array( 'return' => true ) );
@@ -77,7 +77,7 @@ namespace UsabilityDynamics\WPI {
         $invoice['cd_invoice_title'] = wpi_get_invoice_title();
         $invoice['cd_is_paid'] = is_paid();
         $invoice['cd_invoice_status'] = __( ucfirst( $invoice['post_status'] ), ud_get_wp_invoice()->domain );
-        
+
 
         if ( is_paid() ) {
           $invoice['cd_date_paid'] = date(apply_filters('wpi_date_paid_format', 'm/d/Y'), get_post_modified_time('U', false, $invoice['ID']));//date_paid();
@@ -140,7 +140,7 @@ namespace UsabilityDynamics\WPI {
           }
         }
 		if( isset( $_GET['allowed_status'] ) && $_GET['allowed_status'] == 'paid' ){
-			$arr_allowed_status = array( 'paid' );
+			$arr_allowed_status = apply_filters('cd_viewable_invoice_types', array( 'paid' ) );
 		}else{
 			$arr_allowed_status = array_diff(apply_filters('cd_viewable_invoice_types', \WPI_Core::getInstance()->viewable_types()),array('paid'));
 		}
@@ -167,7 +167,7 @@ namespace UsabilityDynamics\WPI {
         return array(
           'total' => (int)$invoices_query->found_posts,
           'items' => $invoice_objects,
-          'invoice_date_title' => 
+          'invoice_date_title' =>
 				  ( isset( $_GET['allowed_status'] ) && $_GET['allowed_status'] == 'paid' )
 			? __( "Paid date", ud_get_wp_invoice()->domain )
 			: __( "Due date", ud_get_wp_invoice()->domain )

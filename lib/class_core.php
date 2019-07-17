@@ -1,133 +1,133 @@
 <?php
 
 /**
- * 
+ *
  */
 class WPI_Core {
 
   /**
    * Singleton
-   * @var type 
+   * @var type
    */
   static private $instance = NULL;
-  
+
   /**
    * User
-   * @var type 
+   * @var type
    */
   public $User;
-  
+
   /**
    * Settings
-   * @var type 
+   * @var type
    */
   public $Settings;
-  
+
   /**
    * Functions
-   * @var type 
+   * @var type
    */
   public $Functions;
-  
+
   /**
    * UI
-   * @var type 
+   * @var type
    */
   public $UI;
-  
+
   /**
    * Ajax
-   * @var type 
+   * @var type
    */
   public $Ajax;
-  
+
   /**
    * WPI Version
-   * @var type 
+   * @var type
    */
   public $version = WP_INVOICE_VERSION_NUM;
-  
+
   /**
    * URI
-   * @var type 
+   * @var type
    */
   public $uri;
-  
+
   /**
    * The path
-   * @var type 
+   * @var type
    */
   public $the_path;
-  
+
   /**
    * Front path
-   * @var type 
+   * @var type
    */
   public $frontend_path;
-  
+
   /**
    * Page link
-   * @var type 
+   * @var type
    */
   public $page_link;
-  
+
   /**
    * Links
-   * @var type 
+   * @var type
    */
   public $links;
-  
+
   /**
    * UI path
-   * @var type 
+   * @var type
    */
   public $ui_path;
-  
+
   /**
    * Current user
-   * @var type 
+   * @var type
    */
   public $current_user;
-  
+
   /**
    * Options
-   * @var type 
+   * @var type
    */
   public $options;
-  
+
   /**
    * Plugin base name
-   * @var type 
+   * @var type
    */
   public $plugin_basename;
-  
+
   /**
    * Path
-   * @var type 
+   * @var type
    */
   public $path;
-  
+
   /**
    * File
-   * @var type 
+   * @var type
    */
   public $file;
-  
+
   /**
    * Directory
-   * @var type 
+   * @var type
    */
   public $directory;
-  
+
   /**
    * User prefs
-   * @var type 
+   * @var type
    */
   public $user_preferences;
 
   /**
    * CRM Notification actions
-   * @var array 
+   * @var array
    */
   static public $crm_notification_actions = array(
       'wpi_send_thank_you_email' => 'WPI: Invoice Paid (Client Receipt)',
@@ -192,7 +192,7 @@ class WPI_Core {
    */
   function init() {
     global $user_ID, $wpi_settings;
-    
+
     $wpi_settings['admin']['ui_path'] = $this->path . "/ui/";
 
     //** Download backup of configuration BEFORE any additional info added to it by filters */
@@ -324,7 +324,7 @@ class WPI_Core {
     if (!get_user_option("wpi_ui_currency_options")) {
       update_user_option($user_ID, 'wpi_ui_currency_options', 'true', true);
     }
-            
+
     wp_register_script('jquery.bind', ud_get_wp_invoice()->path( "static/scripts/vendor/jquery.bind.js", 'url' ), array('jquery'), WP_INVOICE_VERSION_NUM, true );
     wp_register_script('jquery.maskedinput', ud_get_wp_invoice()->path( "static/scripts/vendor/jquery.maskedinput.js", 'url' ), array('jquery'), '1.4.1', true );
     wp_register_script('jquery.form', ud_get_wp_invoice()->path( "static/scripts/vendor/jquery.form.js", 'url' ), array('jquery'), WP_INVOICE_VERSION_NUM, true );
@@ -339,7 +339,7 @@ class WPI_Core {
     wp_register_script('wpi_select2_js', ud_get_wp_invoice()->path( "lib/third-party/select2/select2.js", 'url' ), array('jquery'), WP_INVOICE_VERSION_NUM, true );
 
     wp_register_script('jsapi', 'https://www.google.com/jsapi');
-    
+
     wp_register_style('wpi_select2_css', ud_get_wp_invoice()->path( "lib/third-party/select2/select2.css", 'url' ), array());
 
     //** Masure dependancies are identified in case this script is included in other pages */
@@ -503,6 +503,9 @@ class WPI_Core {
    */
   function admin_head() {
     global $current_screen;
+    if ( empty( $current_screen->id ) ) {
+    	return;
+    }
 
     do_action("wpi_pre_header_{$current_screen->id}", $current_screen->id);
   }

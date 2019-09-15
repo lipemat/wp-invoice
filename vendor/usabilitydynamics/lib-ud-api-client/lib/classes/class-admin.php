@@ -10,27 +10,27 @@ namespace UsabilityDynamics\UD_API {
   if( !class_exists( 'UsabilityDynamics\UD_API\Admin' ) ) {
 
     /**
-     * 
+     *
      * @author: peshkov@UD
      */
     class Admin extends Scaffold {
-    
+
       /**
        *
        */
       public static $version = '1.0.0';
-      
+
       /**
        *
        */
       private $api_url;
-      
+
       /**
        * Don't ever change this, as it will mess with the data stored of which products are activated, etc.
        *
        */
       private $token;
-      
+
       /**
        *
        */
@@ -45,42 +45,42 @@ namespace UsabilityDynamics\UD_API {
        *
        */
       public $ui;
-      
+
       /**
        *
        */
       private $installed_products = array();
-      
+
       /**
        *
        */
       private $pending_products = array();
-      
+
       /**
        *
        */
       private $more_products = array();
-      
+
       /**
        *
        */
       public function __construct( $args = array() ) {
         parent::__construct( $args );
-        
+
         //echo "<pre>"; print_r( $args ); echo "</pre>"; die();
-        
+
         //** Set UD API URL. Can be defined custom one in wp-config.php */
         $this->api_url = defined( 'UD_API_URL' ) ? trailingslashit( UD_API_URL ) : 'https://www.usabilitydynamics.com/';
-        
+
         //** Don't ever change this, as it will mess with the data stored of which products are activated, etc. */
         $this->token = 'udl_' . $this->slug;
-        
+
         //** API */
         $this->api = new API( array_merge( $args, array(
           'api_url' => $this->api_url,
           'token' => $this->token,
         ) ) );
-        
+
         //** Set available screens */
         $screens = array();
         if( $this->type == 'theme' ) {
@@ -94,13 +94,13 @@ namespace UsabilityDynamics\UD_API {
             'more_products' => __( 'More Products', $this->domain ),
           ) );
         }
-        
+
         //** UI */
         $this->ui = new UI( array_merge( $args, array(
           'token' => $this->token,
           'screens' => $screens,
         ) ) );
-        
+
         $path = wp_normalize_path( dirname( dirname( __DIR__ ) ) );
         $this->screens_path = trailingslashit( $path . '/static/templates' );
         if( $this->type == 'theme' && strpos( $path, wp_normalize_path( WP_PLUGIN_DIR ) ) === false ) {
@@ -109,24 +109,16 @@ namespace UsabilityDynamics\UD_API {
         } else {
           $this->assets_url = trailingslashit( plugin_dir_url( dirname( dirname( __DIR__ ) ) . '/readme.md' ) . 'static' );
         }
-        
+
         //** Load the updaters. */
         add_action( 'admin_init', array( $this, 'load_updater_instances' ) );
-        
+
         //** Ensure keys are actually active on specific screens */
         add_action( 'current_screen', array( $this, 'current_screen' ) );
-        
-        if( $this->type == 'plugin' ) {
-          //** Check Activation Statuses */
-          add_action( 'plugins_loaded', array( $this, 'check_activation_status' ), 11 );
-        } 
-        elseif( $this->type == 'theme' ) {
-          $this->check_activation_status();
-        }
-        
+
         //** Add Licenses page */
         add_action( 'admin_menu', array( $this, 'register_licenses_screen' ), 999 );
-        
+
         //** Admin Notices Filter */
         add_filter( 'ud:errors:admin_notices', array( $this, 'maybe_remove_notices' ) );
         add_filter( 'ud:messages:admin_notices', array( $this, 'maybe_remove_notices' ) );
@@ -139,7 +131,7 @@ namespace UsabilityDynamics\UD_API {
         add_action( 'ud::bootstrap::upgrade_notice::additional_info', array( $this, 'maybe_add_info_to_upgrade_notice' ), 10, 2 );
 
       }
-      
+
       /**
        * Register the admin screen.
        *
@@ -156,7 +148,7 @@ namespace UsabilityDynamics\UD_API {
         $this->menu_title = !empty( $screen[ 'menu_title' ] ) ? $screen[ 'menu_title' ] : __( 'Licenses', $this->domain );
         $this->page_title = !empty( $screen[ 'page_title' ] ) ? $screen[ 'page_title' ] : __( 'Licenses', $this->domain );
         $this->menu_slug = $this->slug . '_' . sanitize_key( $this->page_title );
-        
+
         switch( $this->screen_type ) {
           case 'menu':
             global $menu;
@@ -167,20 +159,20 @@ namespace UsabilityDynamics\UD_API {
             $this->hook = add_submenu_page( $screen[ 'parent' ], $this->page_title, $this->menu_title, 'manage_options', $this->menu_slug, array( $this, 'settings_screen' ) );
             break;
         }
-        
+
         //** Set url for licenses page */
         $licenses_link = isset( $screen[ 'parent' ] ) && ( strpos( $screen[ 'parent' ], '?' ) !== false || strpos( $screen[ 'parent' ], '.php' ) !== false ) ? $screen[ 'parent' ] : 'admin.php';
         $licenses_link = add_query_arg( array(
           'page' => $this->menu_slug,
         ), admin_url( $licenses_link ) );
-        
+
         update_option( $this->token . '-url', $licenses_link );
-        
+
         add_action( 'load-' . $this->hook, array( $this, 'process_request' ) );
         add_action( 'admin_print_styles-' . $this->hook, array( $this, 'enqueue_styles' ) );
         add_action( 'admin_print_scripts-' . $this->hook, array( $this, 'enqueue_scripts' ) );
       }
-      
+
       /**
        * Ensure licenses keys are actually active on 'Installed Plugins' page
        *
@@ -199,7 +191,7 @@ namespace UsabilityDynamics\UD_API {
             break;
         }
       }
-      
+
       /**
        * Load the main management screen.
        *
@@ -208,7 +200,7 @@ namespace UsabilityDynamics\UD_API {
        * @return   void
        */
       public function settings_screen () {
-        
+
         $this->ui->get_header();
 
         $screen = $this->ui->get_current_screen();
@@ -231,21 +223,21 @@ namespace UsabilityDynamics\UD_API {
 
         $this->ui->get_footer();
       }
-      
+
       /**
        * Process the action for the admin screen.
        * @since  1.0.0
        * @return  void
        */
       public function process_request () {
-      
+
         add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-      
+
         $supported_actions = array( 'activate-products', 'deactivate-product' );
         if ( !isset( $_REQUEST['action'] ) || !in_array( $_REQUEST['action'], $supported_actions ) || !check_admin_referer( 'bulk-' . 'licenses' ) ) {
           return null;
         }
-        
+
         $response = false;
         $status = 'false';
         $type = $_REQUEST['action'];
@@ -282,12 +274,12 @@ namespace UsabilityDynamics\UD_API {
         if ( $response == true ) {
           $status = 'true';
         }
-        
+
         $redirect_url = \UsabilityDynamics\Utility::current_url( array( 'type' => urlencode( $type ), 'status' => urlencode( $status ) ), array( 'action', 'filepath', '_wpnonce' ) );
         wp_safe_redirect( $redirect_url );
         exit;
       }
-      
+
       /**
        * Enqueue admin styles.
        * @access  public
@@ -297,7 +289,7 @@ namespace UsabilityDynamics\UD_API {
       public function enqueue_styles () {
         wp_enqueue_style( 'lib-ud-api-client-admin', esc_url( $this->assets_url . 'css/admin.css' ), array(), '1.0.0', 'all' );
       }
-      
+
       /**
        * Enqueue admin scripts.
        *
@@ -308,7 +300,7 @@ namespace UsabilityDynamics\UD_API {
       public function enqueue_scripts () {
         wp_enqueue_script( 'post' );
       }
-      
+
       /**
        * Run checks against the API to ensure the product keys are actually active on UsabilityDynamics. If not, deactivate them locally as well.
        *
@@ -326,7 +318,7 @@ namespace UsabilityDynamics\UD_API {
               continue;
             }
             $deactivate = true;
-            
+
             if ( !empty( $already_active[ $k ][2] ) ) {
               //** Get license and activation email  */
               $data = base64_decode( $already_active[ $k ][2] );
@@ -341,7 +333,7 @@ namespace UsabilityDynamics\UD_API {
                 'email'       => trim($activation_email),
                 'licence_key' => trim($license_key),
               ), false, false );
-              
+
               //** Do not deactivate if cannot reach UD */
               if ( $response === false ) {
                 continue;
@@ -356,7 +348,7 @@ namespace UsabilityDynamics\UD_API {
           }
         }
       }
-      
+
       /**
        * Activate a given array of products.
        *
@@ -368,8 +360,8 @@ namespace UsabilityDynamics\UD_API {
         $response = true;
         $errors = false;
         //** Get out if we have incorrect data. */
-        if ( !is_array( $products ) || ( 0 >= count( $products ) ) ) { 
-          return false; 
+        if ( !is_array( $products ) || ( 0 >= count( $products ) ) ) {
+          return false;
         }
         $key = $this->token . '-activated';
         $has_update = false;
@@ -406,10 +398,10 @@ namespace UsabilityDynamics\UD_API {
         } elseif( $errors ) {
           $response = false;
         }
-        
+
         return $response;
       }
-      
+
       /**
        * Deactivate a given product key.
        *
@@ -447,7 +439,7 @@ namespace UsabilityDynamics\UD_API {
         }
         return $response;
       }
-      
+
       /**
        * Load an instance of the updater class for each activated UsabilityDynamics Product.
        * @access public
@@ -491,7 +483,7 @@ namespace UsabilityDynamics\UD_API {
           }
         }
       }
-      
+
       /**
        * Detect which products have been activated.
        *
@@ -505,7 +497,7 @@ namespace UsabilityDynamics\UD_API {
         if ( ! is_array( $response ) ) $response = array();
         return $response;
       }
-      
+
       /**
        * Wrapper for get detected theme or plugins.
        *
@@ -522,7 +514,7 @@ namespace UsabilityDynamics\UD_API {
           return array();
         }
       }
-      
+
       /**
        * Get a list of UsabilityDynamics plugins found on this installation.
        *
@@ -545,15 +537,15 @@ namespace UsabilityDynamics\UD_API {
             foreach ( $products as $k => $v ) {
               if ( in_array( $k, array_keys( $reference_list ) ) ) {
                 $status = 'inactive';
-                if ( in_array( $k, array_keys( $activated_products ) ) ) { 
-                  $status = 'active'; 
+                if ( in_array( $k, array_keys( $activated_products ) ) ) {
+                  $status = 'active';
                 }
-                $response[$k] = array( 
-                  'product_name' => $v['Name'], 
-                  'product_version' => $v['Version'], 
-                  'instance_key' => $reference_list[$k]['instance_key'], 
+                $response[$k] = array(
+                  'product_name' => $v['Name'],
+                  'product_version' => $v['Version'],
+                  'instance_key' => $reference_list[$k]['instance_key'],
                   'product_id' => $reference_list[$k]['product_id'],
-                  'product_status' => $status, 
+                  'product_status' => $status,
                   'product_file_path' => $k,
                   'errors_callback' => isset( $reference_list[$k]['errors_callback'] ) ? $reference_list[$k]['errors_callback'] : false,
                 );
@@ -563,7 +555,7 @@ namespace UsabilityDynamics\UD_API {
         }
         return $response;
       }
-      
+
       /**
        * Get detected theme.
        *
@@ -580,15 +572,15 @@ namespace UsabilityDynamics\UD_API {
           $product = isset( $reference_list[ $boot_path ] ) ? $reference_list[ $boot_path ] : false;
           if ( $product ) {
             $status = 'inactive';
-            if ( isset( $activated_products[ $boot_path ] ) ) { 
-              $status = 'active'; 
+            if ( isset( $activated_products[ $boot_path ] ) ) {
+              $status = 'active';
             }
-            $response[ $boot_path ] = array( 
-              'product_name' => $this->name, 
-              'product_version' => $this->args[ 'version' ], 
-              'instance_key' => $product['instance_key'], 
+            $response[ $boot_path ] = array(
+              'product_name' => $this->name,
+              'product_version' => $this->args[ 'version' ],
+              'instance_key' => $product['instance_key'],
               'product_id' => $product['product_id'],
-              'product_status' => $status, 
+              'product_status' => $status,
               'product_file_path' => $boot_path,
               'errors_callback' => isset( $product['errors_callback'] ) ? $product['errors_callback'] : false,
             );
@@ -597,7 +589,7 @@ namespace UsabilityDynamics\UD_API {
         //echo "<pre>"; print_r( $response ); echo "</pre>"; die();
         return $response;
       }
-      
+
       /**
        * Get a list of UsabilityDynamics plugins or themes which are available for purchasing and downloading.
        *
@@ -621,7 +613,7 @@ namespace UsabilityDynamics\UD_API {
               return $more_products;
             } else {
               $locale = get_locale();
-              $products = !empty( $response[ $locale ][ 'products' ] ) ? 
+              $products = !empty( $response[ $locale ][ 'products' ] ) ?
                 $response[ $locale ][ 'products' ] : ( !empty( $response[ 'en_US' ][ 'products' ] ) ? $response[ 'en_US' ][ 'products' ] : false );
               if( empty( $products ) || !is_array( $products ) ) {
                 return $more_products;
@@ -660,7 +652,7 @@ namespace UsabilityDynamics\UD_API {
         } else {
           $more_products = $trnst;
         }
-        
+
         //** Determine if plugin from the list is already installed and activated */
         //** There is not check condition for 'theme' */
         if( !empty( $more_products ) ) {
@@ -682,7 +674,7 @@ namespace UsabilityDynamics\UD_API {
         //echo "<pre>"; print_r( $more_products ); echo "</pre>"; die();
         return $more_products;
       }
-      
+
       /**
        * Get a list of products from UsabilityDynamics.
        *
@@ -694,15 +686,15 @@ namespace UsabilityDynamics\UD_API {
         global $_ud_license_updater;
         //echo "<pre>"; print_r( $_ud_license_updater ); echo "</pre>"; die();
         $response = array();
-        if( 
-          isset( $_ud_license_updater[ $this->slug ] ) 
-          && is_callable( array( $_ud_license_updater[ $this->slug ], 'get_products' ) ) 
+        if(
+          isset( $_ud_license_updater[ $this->slug ] )
+          && is_callable( array( $_ud_license_updater[ $this->slug ], 'get_products' ) )
         ) {
           $response = $_ud_license_updater[ $this->slug ]->get_products();
         }
         return $response;
       }
-      
+
       /**
        * Get an array of products that haven't yet been activated.
        *
@@ -726,7 +718,7 @@ namespace UsabilityDynamics\UD_API {
         //echo "<pre>"; print_r( $response ); echo "</pre>"; die();
         return $response;
       }
-      
+
       /**
        * Determine, if there are licenses that are not yet activated.
        * @access  public
@@ -765,7 +757,7 @@ namespace UsabilityDynamics\UD_API {
          */
         $this->maybe_ping_ud();
       }
-      
+
       /**
        * Remove specific plugins notices from licenses page
        *
@@ -779,12 +771,12 @@ namespace UsabilityDynamics\UD_API {
         }
         return $notices;
       }
-      
+
       /**
        * Admin notices
        */
       public function admin_notices() {
-        
+
         //** Step 1. Look for default messages */
         $messages = $this->messages;
         if( !empty( $messages ) && is_array( $messages ) ) {
@@ -792,7 +784,7 @@ namespace UsabilityDynamics\UD_API {
             echo '<div class="error fade"><p>' . $message . '</p></div>';
           }
         }
-        
+
         //** Step 2. Look for status messages */
         $message = '';
         $response = '';
@@ -802,7 +794,7 @@ namespace UsabilityDynamics\UD_API {
           $request_errors = $this->api->get_error_log();
 
           //echo "<pre>"; var_dump( $request_errors ); echo "</pre>"; die();
-          
+
           switch ( $_GET['type'] ) {
             case 'no-license-keys':
               $message = __( 'No license keys were specified for activation.', $this->domain );
@@ -860,8 +852,8 @@ namespace UsabilityDynamics\UD_API {
           if ( '' != $response ) {
             echo $response;
           }
-        }        
-        
+        }
+
       }
 
       /**
@@ -1064,9 +1056,9 @@ namespace UsabilityDynamics\UD_API {
         }
 
       }
-      
+
     }
-  
+
   }
-  
+
 }

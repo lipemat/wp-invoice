@@ -244,7 +244,22 @@
           }
           $counter = 1;
           ?>
-          <?php foreach((array)$this_invoice->data['itemized_list'] as $itemized_item) : ?>
+          <?php
+
+          foreach ( (array) $this_invoice->data['itemized_list'] as $itemized_item ) :
+	          if ( ! is_array( $itemized_item ) ) {
+		          $itemized_item = [
+			          'name' => '',
+			          'quantity' => '',
+			          'price' => '',
+			          'description' => '',
+			          'tax_rate' => '',
+		          ];
+	          }
+          //Fix this and commit it
+
+
+          ?>
             <li class="wp_invoice_itemized_list_row clearfix" id="wp_invoice_itemized_list_row_<?php echo $counter; ?>" slug="<?php echo $counter; ?>">
               <span class="id hidden"><?php echo $counter; ?></span>
               <div class="flexible_width_holder">
@@ -273,7 +288,11 @@
           $no_discounts = false;
           if( empty($this_invoice->data['discount']) || !is_array($this_invoice->data['discount']))  {
             $no_discounts = true;
-            $this_invoice->data['discount'][1] = true;
+	          $this_invoice->data['discount'][1] = [
+		          'name'   => '',
+		          'type'   => '',
+		          'amount' => '',
+	          ];
           }
           $discount_types = serialize(array('amount' => __('Amount Discount', ud_get_wp_invoice()->domain), 'percent' => __('Percent Discount', ud_get_wp_invoice()->domain)));
           ?>
@@ -344,7 +363,7 @@
                 if( empty($service['name']) ) {
                   continue;
                 }
-                
+
                 $service['description'] = !empty($service['description'])?$service['description']:'';
                 $service['tax'] = !empty($service['tax'])?$service['tax']:'';
                 $_name = htmlspecialchars(stripslashes($service['name']));

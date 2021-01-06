@@ -226,7 +226,6 @@ class WPI_Invoice {
     }
 
     //** Load Globals */
-
     $this->data = array_merge($this->data, $wpi_settings['globals']);
     
     //** Default Currency */

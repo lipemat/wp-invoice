@@ -412,7 +412,7 @@ function postbox_payment_methods( array $this_invoice) {
           </select>&nbsp;&nbsp;
           <?php
           if (count($this_invoice['billing']) > 1) {
-            echo WPI_UI::checkbox( 'class=wpi_client_change_payment_method&name=wpi_invoice[client_change_payment_method]&value=true&label=' . __('Client can change payment option.', ud_get_wp_invoice()->domain), ! empty( $this_invoice['client_change_payment_method'] ) && ( 'yes' === $this_invoice['client_change_payment_method'] || 'on' === $this_invoice['client_change_payment_method'] ) );
+            echo WPI_UI::checkbox( 'class=wpi_client_change_payment_method&name=wpi_invoice[client_change_payment_method]&value=true&label=' . __('Client can change payment option.', ud_get_wp_invoice()->domain), ! empty( $this_invoice['client_change_payment_method'] ) && WPI_Functions::is_true( $this_invoice['client_change_payment_method'] ) );
           }
           ?>
           &nbsp;&nbsp;
@@ -430,7 +430,7 @@ function postbox_payment_methods( array $this_invoice) {
               <?php if (empty($value['name']))
                 break; ?>
               <li class="clearfix">
-      <?php echo WPI_UI::checkbox("name=wpi_invoice[billing][{$key}][allow]&id={$key}&value=true&label={$value['name']}&class=wpi_billing_section_show", 'on' === $value['allow'] || 'true' === $value['allow'] ) ?>
+      <?php echo WPI_UI::checkbox("name=wpi_invoice[billing][{$key}][allow]&id={$key}&value=true&label={$value['name']}&class=wpi_billing_section_show", WPI_Functions::is_true( $value['allow'] ) ) ?>
               </li>
     <?php endforeach; ?>
           </ul>

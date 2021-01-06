@@ -549,9 +549,9 @@ class WPI_Settings_page {
   /**
    * Payment tab
    *
-   * @param type $wpi_settings
+   * @param array $wpi_settings
    */
-  static function payment($wpi_settings) {
+  public static function payment( array $wpi_settings) {
     ?>
     <table class="form-table">
       <tr>
@@ -613,7 +613,7 @@ class WPI_Settings_page {
                 <option value="<?php echo $key; ?>" <?php echo $payment_option['object']->options['default_option']?'SELECTED':''; ?>><?php echo $payment_option['name']; ?></option>
             <?php } ?>
           </select>&nbsp;&nbsp;
-        <?php echo WPI_UI::checkbox("class=wpi_client_change_payment_method&name=wpi_settings[client_change_payment_method]&value=yes&label=" . __('Client can change payment option.', ud_get_wp_invoice()->domain), WPI_Functions::is_true($wpi_settings['client_change_payment_method'])) ?>
+	        <?php echo WPI_UI::checkbox( 'class=wpi_client_change_payment_method&name=wpi_settings[globals][client_change_payment_method]&value=yes&label=' . __( 'Client can change payment option.', ud_get_wp_invoice()->domain ), ! empty( $wpi_settings['globals']['client_change_payment_method'] ) && WPI_Functions::is_true( $wpi_settings['globals']['client_change_payment_method'] ) ) ?>
         </td>
       </tr>
 

@@ -67,9 +67,6 @@ class WPI_Settings {
     //** Advanced Settings */
     $this->options[ 'allow_deposits' ] = 'true';
 
-    //** Payment */
-    $this->options[ 'client_change_payment_method' ] = 'false';
-
     //** Basic Settings */
     $this->options[ 'replace_page_title_with_subject' ] = 'true';
     $this->options[ 'using_godaddy' ] = 'no';

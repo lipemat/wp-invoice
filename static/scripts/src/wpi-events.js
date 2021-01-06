@@ -290,8 +290,6 @@ jQuery( document ).ready( function () {
    * If user can't change paymetn method than we hide all methods except for the one selected
    */
   jQuery( '#wp_invoice_payment_method' ).on( 'change', function ( event ) {
-    if ( jQuery( '.wpi_client_change_payment_method' ).is( ":not(:checked)" ) )
-      wpi_disable_all_payment_methods();
     wpi_select_payment_method( jQuery( 'option:selected', this ).val(), true );
   } );
 

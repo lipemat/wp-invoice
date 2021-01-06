@@ -854,17 +854,6 @@ function wp_invoice_subscription_start_time ( add_days ) {
   return false;
 }
 
-function wpi_disable_all_payment_methods () {
-  // uncheck app payment method checkboxes
-  jQuery( '.wpi_billing_section_show' ).attr( 'checked', false );
-  // blank out all billing venue default_payment settings
-  jQuery( ".billing-default-option" ).val( '' );
-  // hide all accordion sections
-  jQuery( ".wp_invoice_accordion .wp_invoice_accordion_section" ).hide();
-  // Hide all notices that reappear when checkbox is checked
-  jQuery( '.wpi_notice' ).hide();
-}
-
 function wpi_init_payment_method () {
   // cycle through checked methods and run the wpi_select_payment_method which will either turn them on or off
   jQuery( '.wpi_billing_section_show' ).each( function () {
@@ -873,39 +862,46 @@ function wpi_init_payment_method () {
 }
 
 
-function wpi_select_payment_method ( method, force, init ) {
-  var method_checked;
-  // force set to true means we check the checkbox for this repsective method automatically
-  if ( force ) jQuery( "#" + method + ".wpi_billing_section_show" ).attr( 'checked', true );
-  if ( jQuery( "#" + method + ".wpi_billing_section_show" ).is( ":checked" ) ) {
-    method_checked = true
-  } else {
-    method_checked = false;
-  }
-  if ( method_checked ) {
-    // checked, we are turning payment method on
-    // Set all "default payment" values to nothing
-    jQuery( ".billing-default-option" ).val( '' );
-    // enter in billing venue option to set it to default
-    jQuery( ".billing-" + method + "-default-option" ).val( 'true' );
-    // display accordion secttion if its not displayed
-    jQuery( "div." + method + "-setup-section" ).show();
-    // activate accordion section unless this function was ran at initilization
-    if ( !init ) {
-      jQuery( '.wp_invoice_accordion' ).accordion( 'option', 'active', '#' + method + '-setup-section-header' );
-    }
-    jQuery( "#" + method + ".wpi_billing_section_show" ).parent().parent().find( '.wpi_notice' ).show();
-    jQuery( "#" + method + ".wpi_billing_section_show" ).parent().parent().find( '.wpi_notice' ).animate( {backgroundColor: 'lightyellow'}, 1000 );
-  } else {
-    // not checked, we are turning this thing off
-    // enter in billing venue option to set it to default
-    jQuery( ".billing-" + method + "-default-option" ).val( '' );
-    // display accordion secttion if its not displayed
-    jQuery( "div." + method + "-setup-section" ).hide();
-    // this is being hidden, so we activate the default
-    if ( !init ) jQuery( '.wp_invoice_accordion' ).accordion( 'option', 'active', '#' + jQuery( '#wp_invoice_payment_method option:selected' ).val() + '-setup-section-header' );
-    jQuery( "#" + method + ".wpi_billing_section_show" ).parent().parent().find( '.wpi_notice' ).hide();
-  }
+function wpi_select_payment_method( method, force, init ) {
+	var method_checked;
+	var checkbox = jQuery( '#' + method + '.wpi_billing_section_show' );
+	var option = jQuery( '.billing-' + method + '-default-option' );
+	// force set to true means we check the checkbox for this repsective method automatically
+	if ( force ) {
+		checkbox.attr( 'checked', true );
+	}
+	// Set all "default payment" values to nothing.
+	if ( ! init ) {
+		jQuery( '.billing-default-option' ).val( '' );
+	}
+
+	if ( force || checkbox.is( ':checked' ) ) {
+		if ( ! init ) {
+			option.val( 'true' );
+			jQuery( '#wp_invoice_payment_method' ).val( method );
+		}
+		// display accordion section if its not displayed
+		jQuery( 'div.' + method + '-setup-section' ).show();
+		// activate accordion section unless this function was ran at initialization
+		if ( ! init ) {
+			jQuery( '.wp_invoice_accordion' ).accordion( 'option', 'active', '#' + method + '-setup-section-header' );
+		}
+		checkbox.parent().parent().find( '.wpi_notice' ).show();
+		checkbox.parent().parent().find( '.wpi_notice' ).animate( {backgroundColor: 'lightyellow'}, 1000 );
+
+	} else {
+		// display accordion section if its not displayed
+		jQuery( 'div.' + method + '-setup-section' ).hide();
+		// this is being hidden, so we activate the default
+		if ( ! init ) {
+			jQuery( '.wp_invoice_accordion' ).accordion( 'option', 'active', '#' + jQuery( '#wp_invoice_payment_method option:selected' ).val() + '-setup-section-header' );
+		}
+		jQuery( '#' + method + '.wpi_billing_section_show' ).parent().parent().find( '.wpi_notice' ).hide();
+	}
+
+	if ( init && 'true' === option.val() ) {
+		jQuery( '#wp_invoice_payment_method' ).val( method );
+	}
 }
 
 function wpi_focus_payment_method ( method ) {

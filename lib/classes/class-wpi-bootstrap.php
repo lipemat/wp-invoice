@@ -219,18 +219,6 @@ namespace UsabilityDynamics\WPI {
         if ( !class_exists('\WPI_Functions') ) {
           require_once( ud_get_wp_invoice()->path( 'lib/class_functions.php', 'dir' ) );
         }
-        
-        //** check if scheduler already sheduled */
-        if ( !wp_next_scheduled( 'wpi_hourly_event' ) ) {
-
-          //** Setup WPI schedule to handle recurring invoices */
-          wp_schedule_event( time(), 'hourly', 'wpi_hourly_event' );
-        }
-        if ( !wp_next_scheduled( 'wpi_update' ) ) {
-
-          //** Scheduling daily update event */
-          wp_schedule_event( time(), 'daily', 'wpi_update' );
-        }
 
         //** Try to create new schema tables */
         \WPI_Functions::create_new_schema_tables();
@@ -268,17 +256,8 @@ namespace UsabilityDynamics\WPI {
           'licenses_page_title' => __( 'WP-Invoice Add-ons Manager', $this->domain ),
         ) );
       }
-      
-      /**
-       * Plugin Deactivation
-       *
-       */
-      public function deactivate() {
-        wp_clear_scheduled_hook( 'wpi_hourly_event' );
-        wp_clear_scheduled_hook( 'wpi_update' );
-        wp_clear_scheduled_hook( 'wpi_spc_remove_abandoned_transactions' );
-      }
 
+      
       /**
        * Run Install Process.
        *

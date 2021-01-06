@@ -68,10 +68,10 @@
               <th><?php _e("Client can change payment method:", ud_get_wp_invoice()->domain) ?></th>
               <td>
                 <?php echo WPI_UI::select(array(
-                    'name' => 'wpi_settings[globals][client_change_payment_method]',
+                    'name' => 'wpi_settings[client_change_payment_method]',
                     'id'   => 'wpi_invoice_client_change_payment_method',
                     'values' => 'yon',
-                    'current_value' => $wpi_settings['globals']['client_change_payment_method']
+                    'current_value' => $wpi_settings['client_change_payment_method']
                 )); ?>
               </td>
             </tr>

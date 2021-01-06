@@ -414,7 +414,6 @@ class WPI_Settings {
 
     $this->options[ 'currency' ][ 'default_currency_code' ] = 'USD';
     $this->options[ 'currency' ][ 'symbols_updated' ] = true;
-    $this->options[ 'globals' ][ 'client_change_payment_method' ] = 'true';
     $this->options[ 'globals' ][ 'show_business_address' ] = 'false';
     $this->options[ 'globals' ][ 'show_quantities' ] = 'false';
 
@@ -575,6 +574,9 @@ class WPI_Settings {
         unset( $settings[ 'installed_gateways' ] );
       }
 
+      // Remove legacy global option which conflicts
+		unset( $settings['globals']['client_change_payment_method'] );
+	    
       if ( update_option( 'wpi_options', $settings ) ) {
         return true;
       }
@@ -586,14 +588,16 @@ class WPI_Settings {
    *
    * @return bool
    */
-  function CommitUpdates() {
-    $oldvalue = get_option( 'wpi_options' );
-    if ( $oldvalue == $this->options ) {
-      return false;
-    } else {
-      return update_option( 'wpi_options', $this->options );
-    }
-  }
+	public function CommitUpdates() {
+		// Remove legacy global option which conflicts.
+		unset( $this->options['globals']['client_change_payment_method'] );
+
+		if ( get_option( 'wpi_options' ) === $this->options ) {
+			return false;
+		}
+
+		return update_option( 'wpi_options', $this->options );
+	}
 
   /**
    * Converts old options to new.

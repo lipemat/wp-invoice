@@ -293,15 +293,6 @@ jQuery( document ).ready( function () {
     if ( jQuery( '.wpi_client_change_payment_method' ).is( ":not(:checked)" ) )
       wpi_disable_all_payment_methods();
     wpi_select_payment_method( jQuery( 'option:selected', this ).val(), true );
-    wpi_can_client_change_payment_method();
-  } );
-
-  /**
-   * Called when user changes wheather the client can change payment method, or must use the default
-   * wpi_can_client_change_payment_method() handles toggling options
-   */
-  jQuery( '.wpi_client_change_payment_method' ).on( 'click', function ( event ) {
-    wpi_can_client_change_payment_method();
   } );
 
   /**
@@ -513,14 +504,6 @@ jQuery( document ).ready( function () {
           jQuery( '.wpi_install_custom_templates_result' ).html( response.join() ).show();
         }, 'json' );
     }
-  } );
-
-  /**
-   * Called when user changes wheather the client can change payment method, or must use the default
-   * wpi_can_client_change_payment_method() handles toggling options
-   */
-  jQuery( '.wpi_settings_client_change_payment_method' ).on( 'change', function ( event ) {
-    wpi_can_client_change_payment_method();
   } );
 
   /**

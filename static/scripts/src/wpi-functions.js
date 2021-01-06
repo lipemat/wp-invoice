@@ -870,22 +870,8 @@ function wpi_init_payment_method () {
   jQuery( '.wpi_billing_section_show' ).each( function () {
     wpi_select_payment_method( jQuery( this ).attr( 'id' ), false, true );
   } );
-  // if client cannot change payment method, we hide payment method checkboxes
-  wpi_can_client_change_payment_method()
 }
 
-function wpi_can_client_change_payment_method () {
-  if ( jQuery( '.wpi_client_change_payment_method' ).is( ":not(:checked)" ) ) {
-    // hide all payment selection checkboxes
-    jQuery( ".wpi-payment-setting" ).hide();
-    // hide all payment options
-    wpi_disable_all_payment_methods();
-    // display only the default selected payment option
-    wpi_select_payment_method( jQuery( '#wp_invoice_payment_method option:selected' ).val(), true, true )
-  } else {
-    jQuery( ".wpi-payment-setting" ).show();
-  }
-}
 
 function wpi_select_payment_method ( method, force, init ) {
   var method_checked;

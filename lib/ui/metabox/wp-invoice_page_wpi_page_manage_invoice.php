@@ -391,10 +391,9 @@ function postbox_user_existing($this_invoice) {
 
 /**
  * Payment methods metabox
- * @global type $wpi_settings
- * @param type $this_invoice
+ * @param array $this_invoice
  */
-function postbox_payment_methods($this_invoice) {
+function postbox_payment_methods( array $this_invoice) {
   global $wpi_settings;
   if (!empty($this_invoice['billing'])) {
     $this_invoice['billing'] = apply_filters('wpi_billing_method', $this_invoice['billing']);
@@ -413,7 +412,7 @@ function postbox_payment_methods($this_invoice) {
           </select>&nbsp;&nbsp;
           <?php
           if (count($this_invoice['billing']) > 1) {
-            echo WPI_UI::checkbox("class=wpi_client_change_payment_method&name=wpi_invoice[client_change_payment_method]&value=true&label=".__('Client can change payment option.', ud_get_wp_invoice()->domain), !empty( $this_invoice['client_change_payment_method'] )? ( $this_invoice['client_change_payment_method'] == 'on' ? true : false ) : false);
+            echo WPI_UI::checkbox( 'class=wpi_client_change_payment_method&name=wpi_invoice[client_change_payment_method]&value=true&label=' . __('Client can change payment option.', ud_get_wp_invoice()->domain), ! empty( $this_invoice['client_change_payment_method'] ) && ( 'yes' === $this_invoice['client_change_payment_method'] || 'on' === $this_invoice['client_change_payment_method'] ) );
           }
           ?>
           &nbsp;&nbsp;
@@ -431,7 +430,7 @@ function postbox_payment_methods($this_invoice) {
               <?php if (empty($value['name']))
                 break; ?>
               <li class="clearfix">
-      <?php echo WPI_UI::checkbox("name=wpi_invoice[billing][{$key}][allow]&id={$key}&value=true&label={$value['name']}&class=wpi_billing_section_show", $value['allow'] == 'on' ? true : false) ?>
+      <?php echo WPI_UI::checkbox("name=wpi_invoice[billing][{$key}][allow]&id={$key}&value=true&label={$value['name']}&class=wpi_billing_section_show", 'on' === $value['allow'] || 'true' === $value['allow'] ) ?>
               </li>
     <?php endforeach; ?>
           </ul>

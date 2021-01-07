@@ -510,16 +510,13 @@ input.wpi_no_input {
 }
 #wpi_invoice_form .input_field,
 .itemized_list .input_field {
-  -moz-border-radius-bottomleft: 2px;
-  -moz-border-radius-bottomright: 2px;
-  -moz-border-radius-topleft: 2px;
-  -moz-border-radius-topright: 2px;
+  border-radius: 3px;
   -x-system-font: none;
   background: #fefefe url(images/input_back.jpg) repeat-x scroll top left;
   border-color: #AFAFAF #E1E1E1 #E1E1E1 #8E8E8E;
   border-style: solid;
   border-width: 1px;
-  padding: 3px !important;
+  padding: 0 6px !important;
 }
 .wp_invoice_new_user .input_field {
   width: 95%;
@@ -826,10 +823,9 @@ input.wpi_no_input {
   width: 40px;
 }
 .itemized_list .row_price {
-  width: 40px;
+  width: 80px;
 }
 .itemized_list .row_total {
-  /*width: 60px;*/
   float: right;
   margin-right: 12px;
 }
@@ -995,6 +991,7 @@ input.wpi_no_input {
   padding: 5px 8px 8px;
   margin-bottom: 0;
   font-weight: bold;
+	display: block;
 }
 .itemized_list .footer {
   background: #F1F1F1;
@@ -1043,14 +1040,12 @@ input.wpi_no_input {
   background: #FFF;
   border: 1px solid red;
   margin: 0;
-  -moz-border-radius: 0;
   padding: 3px;
 }
 #wpi_invoice_form label.error {
   background: transparent;
   border: 0;
   margin-left: 10px;
-  -moz-border-radius: 0;
   color: red;
 }
 #add_new_invoice .white_background {

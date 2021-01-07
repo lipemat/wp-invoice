@@ -305,26 +305,6 @@ class WPI_Core {
     $this->user_preferences['manage_page'] = get_user_meta($user_ID, 'wp_invoice_ui_manage_page');
     $this->user_preferences['main'] = get_user_meta($user_ID, 'wp_invoice_ui_main');
 
-    if (!get_user_option("screen_layout_admin_page_wpi_invoice_edit")) {
-      update_user_option($user_ID, 'screen_layout_admin_page_wpi_invoice_edit', 2, true);
-    }
-
-    if (!get_user_option("wpi_ui_display_global_tax")) {
-      update_user_option($user_ID, 'wpi_ui_display_global_tax', 'true', true);
-    }
-
-    if (!get_user_option("wpi_ui_display_itemized_tax")) {
-      update_user_option($user_ID, 'wpi_ui_display_itemized_tax', 'false', true);
-    }
-
-    if (!get_user_option("wpi_ui_payment_method_options")) {
-      update_user_option($user_ID, 'wpi_ui_payment_method_options', 'true', true);
-    }
-
-    if (!get_user_option("wpi_ui_currency_options")) {
-      update_user_option($user_ID, 'wpi_ui_currency_options', 'true', true);
-    }
-
     wp_register_script('jquery.bind', ud_get_wp_invoice()->path( "static/scripts/vendor/jquery.bind.js", 'url' ), array('jquery'), WP_INVOICE_VERSION_NUM, true );
     wp_register_script('jquery.maskedinput', ud_get_wp_invoice()->path( "static/scripts/vendor/jquery.maskedinput.js", 'url' ), array('jquery'), '1.4.1', true );
     wp_register_script('jquery.form', ud_get_wp_invoice()->path( "static/scripts/vendor/jquery.form.js", 'url' ), array('jquery'), WP_INVOICE_VERSION_NUM, true );

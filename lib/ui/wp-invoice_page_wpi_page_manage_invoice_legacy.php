@@ -72,58 +72,17 @@
   .wpi_hide_until_saved {display:none;}
 
   <?php }
-
-  // Toggle inline tax CSS
-
-  if(get_user_option('wpi_ui_display_itemized_tax') != 'true') { ?>
-
-  .row_tax {display:none;}
+  ?>
 
   .header .flexible_width_holder_content, .wp_invoice_itemized_list_row .flexible_width_holder_content, .wp_invoice_itemized_charge_row .flexible_width_holder_content { margin-right: 250px;}
 
   .header .fixed_width_holder, .wp_invoice_itemized_list_row .fixed_width_holder, .wp_invoice_itemized_charge_row .fixed_width_holder { width: 240px; }
-
-  <?php } else { ?>
-
-  .row_tax {display:inline;}
-
-  .header .flexible_width_holder_content, .wp_invoice_itemized_list_row .flexible_width_holder_content, .wp_invoice_itemized_charge_row .flexible_width_holder_content { margin-right: 300px;}
-
-  .header .fixed_width_holder, .wp_invoice_itemized_list_row .fixed_width_holder, .wp_invoice_itemized_charge_row .fixed_width_holder { width: 280px; }
-
-  <?php }
-
-  // Toggle global tax CSS display
-
-  if(get_user_option('wpi_ui_display_global_tax') != 'true') { ?>
-
-  tr.wpi_ui_display_global_tax {display:none;}
-
-  <?php }  ?>
-
-  <?php
-
-  if(get_user_option('wpi_ui_currency_options') != 'true') { ?>
-
-  tr.wpi_ui_currency_options {display:none;}
-
-  <?php }  ?>
-
-  <?php
-
-  if(get_user_option('wpi_ui_payment_method_options') != 'true') { ?>
-
-  tr.wpi_ui_payment_method_options {display:none;}
-
-  <?php }  ?>
 
   #post-body .wp_themeSkin .mceStatusbar a.mceResize {top:0;}
 
 </style>
 
 <div id="wpi_manage_page" class="wrap <?php echo (!empty($this_invoice->data['post_status']) ? 'wpi_invoice_status_' . $this_invoice->data['post_status'] : ''); ?>">
-
-<?php screen_icon("wpi"); ?>
 
 <h2>
 
@@ -179,7 +138,7 @@
 
     ?>
 
-<div id="poststuff" class="crm-wp-less-v34 metabox-holder<?php echo 2 == get_user_option("screen_layout_admin_page_wpi_invoice_edit") ? ' has-right-sidebar' : ''; ?>">
+<div id="poststuff" class="crm-wp-less-v34 metabox-holder has-right-sidebar">
 
   <div id="side-info-column" class="inner-sidebar">
 

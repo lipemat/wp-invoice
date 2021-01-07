@@ -53,20 +53,6 @@
   .row_tax {display:inline;}
   .header .flexible_width_holder_content, .wp_invoice_itemized_list_row .flexible_width_holder_content, .wp_invoice_itemized_charge_row .flexible_width_holder_content { margin-right: 300px;}
   .header .fixed_width_holder, .wp_invoice_itemized_list_row .fixed_width_holder, .wp_invoice_itemized_charge_row .fixed_width_holder { width: 280px; }
-
-  <?php //** Toggle global tax CSS display */ ?>
-  <?php if(get_user_option('wpi_ui_display_global_tax') != 'true') : ?>
-  tr.wpi_ui_display_global_tax {display:none;}
-  <?php endif; ?>
-
-  <?php if(get_user_option('wpi_ui_currency_options') != 'true') : ?>
-  tr.wpi_ui_currency_options {display:none;}
-  <?php endif;  ?>
-
-  <?php if(get_user_option('wpi_ui_payment_method_options') != 'true') : ?>
-  tr.wpi_ui_payment_method_options {display:none;}
-  <?php endif;  ?>
-
   #post-body .wp_themeSkin .mceStatusbar a.mceResize {top:0;}
 </style>
 

@@ -56,7 +56,6 @@ class ComposerStaticInitb060b68059ccb15a61f536dce2626a08
         'UsabilityDynamics\\WP\\Bootstrap' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-bootstrap.php',
         'UsabilityDynamics\\WP\\Bootstrap_Plugin' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-bootstrap-plugin.php',
         'UsabilityDynamics\\WP\\Bootstrap_Theme' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-bootstrap-theme.php',
-        'UsabilityDynamics\\WP\\Dashboard' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-dashboard.php',
         'UsabilityDynamics\\WP\\Errors' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-errors.php',
         'UsabilityDynamics\\WP\\Scaffold' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-scaffold.php',
         'UsabilityDynamics\\WP\\TGMPA_List_Table' => __DIR__ . '/..' . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-tgm-list-table.php',

@@ -55,7 +55,6 @@ return array(
     'UsabilityDynamics\\WP\\Bootstrap' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-bootstrap.php',
     'UsabilityDynamics\\WP\\Bootstrap_Plugin' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-bootstrap-plugin.php',
     'UsabilityDynamics\\WP\\Bootstrap_Theme' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-bootstrap-theme.php',
-    'UsabilityDynamics\\WP\\Dashboard' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-dashboard.php',
     'UsabilityDynamics\\WP\\Errors' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-errors.php',
     'UsabilityDynamics\\WP\\Scaffold' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-scaffold.php',
     'UsabilityDynamics\\WP\\TGMPA_List_Table' => $vendorDir . '/usabilitydynamics/lib-wp-bootstrap/lib/classes/class-tgm-list-table.php',

@@ -828,6 +828,7 @@ input.wpi_no_input {
 .itemized_list .row_total {
   float: right;
   margin-right: 12px;
+  margin-left: 0;
 }
 .itemized_list .name {
   width: 100%;
@@ -839,6 +840,8 @@ input.wpi_no_input {
   padding-bottom: 10px;
   padding-top: 10px;
   border-bottom: 1px solid #f1f1f1;
+  display: block;
+  width: 100%;
 }
 .ud_ui_dynamic_table.form-table {
   margin-bottom: 8px;
@@ -982,6 +985,7 @@ input.wpi_no_input {
   background-color: #F9F9F9;
   border-color: #DFDFDF;
   margin-bottom: 20px;
+  display: block !important;
 }
 .itemized_list .header .fixed_width_holder {
   padding-left: 10px;

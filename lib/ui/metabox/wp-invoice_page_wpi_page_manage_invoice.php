@@ -208,25 +208,6 @@ function postbox_publish($this_invoice) {
               </div>
             </td>
           </tr>
-          <tr class="invoice_main column-publish-invoice_id">
-            <th><?php _e('Invoice ID', ud_get_wp_invoice()->domain); ?> </th>
-            <td>
-              <?php
-                $custom_invoice_id = !empty($this_invoice['custom_id']) ? $this_invoice['custom_id'] : '';
-                if (empty($custom_invoice_id) && $wpi_settings['increment_invoice_id'] == 'true') {
-                  $highest_custom_id = WPI_Functions::get_highest_custom_id();
-                  $custom_invoice_id = ($highest_custom_id ? ($highest_custom_id + 1) : $this_invoice['invoice_id']);
-                  echo WPI_UI::input("name=wpi_invoice[meta][custom_id]&value=$custom_invoice_id");
-                } else {
-              ?>
-                <input style="width: 80px;" class="input_field wp_invoice_custom_invoice_id<?php echo empty($this_invoice['custom_id'])?" wp_invoice_hidden":""; ?>" name="wpi_invoice[meta][custom_id]" value="<?php echo !empty($this_invoice['custom_id']) ? $this_invoice['custom_id'] : ''; ?>">
-                <span class="wp_invoice_custom_invoice_id">
-                  <?php echo $this_invoice['invoice_id']; ?>
-                </span>
-                <a onClick="jQuery('.wp_invoice_custom_invoice_id').toggle(); return false;" class="wp_invoice_click_me <?php echo empty($this_invoice['custom_id'])?" wp_invoice_hidden":""; ?>" href="#"><?php _e('Custom Invoice ID', ud_get_wp_invoice()->domain); ?></a>
-              <?php } ?>
-            </td>
-          </tr>
           <tr class="invoice_main column-publish-global_tax">
             <th><?php _e('Global Tax', ud_get_wp_invoice()->domain); ?></th>
             <td>

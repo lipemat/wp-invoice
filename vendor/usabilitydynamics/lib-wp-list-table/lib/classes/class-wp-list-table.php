@@ -478,10 +478,17 @@ namespace UsabilityDynamics\WPLT {
           }
         }
 
-        /* Use method below to pass extra arguments or modify existing ones. */
-        $args = $this->filter_wp_query( $args );
+        $query =  new \WP_Query( $args );
+        // Search by post id.
+        if ( 0 === $query->found_posts && ! empty( $args['meta_query' ])) {
+	        $query = new \WP_Query(
+		        wp_parse_args( [
+			        'post__in'   => [ $args['meta_query'][0]['value'] ],
+			        'meta_query' => null,
+		        ], $args ) );
+        }
 
-        return new \WP_Query( $args );
+        return $query;
       }
 
       /**
@@ -627,17 +634,6 @@ namespace UsabilityDynamics\WPLT {
         }
 
         return $_query;
-      }
-
-      /**
-       * Redeclare method in child class to
-       * pass extra arguments or modify existing ones for WP_Query
-       *
-       * @param array $args
-       * @return array
-       */
-      public function filter_wp_query( $args ) {
-        return $args;
       }
 
       /**

@@ -206,7 +206,6 @@ class WPI_Invoice {
 
     $defaults = array (
       'invoice_id' => '',
-      'custom_id' => '',
       'subject' => '',
       'description' => ''
     );
@@ -220,9 +219,6 @@ class WPI_Invoice {
     }
     if (!empty ($description)) {
       $this->data['description'] = $description;
-    }
-    if (!empty ($custom_id)) {
-      $this->data['meta']['custom_id'] = $custom_id;
     }
 
     //** Load Globals */
@@ -272,7 +268,7 @@ class WPI_Invoice {
    * @global type $wpi_settings
    * @global type $blog_id
    * @param type $args
-   * @return type
+   * @return array|void
    */
   function load_invoice($args = '') {
     global $wpdb, $wpi_settings, $blog_id;
@@ -286,7 +282,7 @@ class WPI_Invoice {
 
     $new_invoice = is_numeric($id) ? false : true;
 
-    $invoice_data = $wpdb->get_row("SELECT * FROM {$wpdb->posts} WHERE ID = '$id'", ARRAY_A);
+    $invoice_data = (array) $wpdb->get_row("SELECT * FROM {$wpdb->posts} WHERE ID = '$id'", ARRAY_A);
 
     if( $new_invoice || empty($invoice_data) ) {
       $this->error = true;
@@ -310,6 +306,8 @@ class WPI_Invoice {
         $invoice_data[$meta_key] = (empty($tmp_meta_value) || !is_array($tmp_meta_value)) ? $meta_value : $tmp_meta_value;
       }
     }
+
+    $invoice_data['custom_id'] = $id;
 
     WPI_Functions::merge_billings( $wpi_settings['billing'], $invoice_data['billing'] );
 

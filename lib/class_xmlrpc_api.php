@@ -19,11 +19,6 @@ $wpi_xml_rpc_api_reference = array(
     'create_invoice' => array(
       'description' => 'Create new invoice based on information passed.',
       'args' => array(
-        'custom_id' => array(
-          'description' => 'Previously generated Custom Invoice ID.',
-          'required' => false,
-          'type' => 'Number'
-        ),
         'subject' => array(
           'description' => 'The title of invoice post object.',
           'required' => true,
@@ -286,7 +281,6 @@ class WPI_XMLRPC_API {
 
     //** Default arguments */
     $defaults = array(
-      'custom_id' => false,
       'subject' => false,
       'description' => false,
       'type' => false,

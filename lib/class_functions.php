@@ -1050,16 +1050,12 @@ class WPI_Functions {
    * @author korotkov@ud
    * @since 3.08.4
    */
-  static function get_highest_custom_id() {
-    global $wpdb;
-
-    $max_custom_id = $wpdb->get_results( "
-      SELECT max( cast( `meta_value` AS UNSIGNED ) ) AS max
-      FROM `{$wpdb->postmeta}`
-      WHERE `meta_key` = 'custom_id'
-    ", ARRAY_A );
-
-    return !empty( $max_custom_id[ 0 ][ 'max' ] ) ? $max_custom_id[ 0 ][ 'max' ] : false;
+  static function get_highest_custom_id() : int {
+	  $latest = (array) wp_get_recent_posts( [
+		  'post_type'   => 'wpi_object',
+		  'numberposts' => 1,
+	  ] );
+	  return $latest[0]->ID ?? 0;
   }
 
   /**
@@ -1430,9 +1426,6 @@ class WPI_Functions {
 
     //** Tax */
     $ni->set( array( 'tax' => $invoice[ 'meta' ][ 'tax' ] ) );
-
-    //** Custom ID */
-    $ni->set( array( 'custom_id' => $invoice[ 'meta' ][ 'custom_id' ] ) );
 
     //** type is 'invoice' by default */
     $invoice_type = 'invoice';
@@ -2852,13 +2845,6 @@ function get_invoice_id( $identificator ) {
   if ( empty( $id ) ) {
     $id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'invoice_id' AND meta_value = %s",
       $identificator
-    ) );
-  }
-
-  //** Determine if $identificator is custom_id */
-  if ( empty( $id ) ) {
-    $id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'custom_id' AND meta_value = %s",
-        $identificator
     ) );
   }
 

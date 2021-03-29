@@ -476,17 +476,6 @@ class WPI_Legacy {
             'year' => $invoice[ 'wp_invoice_subscription_start_year' ]
           )
         ),
-        'meta' => array(
-          'custom_id' => $invoice[ 'wp_invoice_custom_invoice_id' ],
-          'tax' => $invoice[ 'wp_invoice_tax' ],
-          'discount' => array(
-            1 => array(
-              'name' => '',
-              'type' => 'amount',
-              'amount' => '',
-            )
-          )
-        ),
         'default_currency_code' => $invoice[ 'wp_invoice_currency_code' ],
         'client_change_payment_method' => ( $invoice[ 'wp_invoice_client_change_payment_method' ] == '1' ? 'on' : 'off' )
       );
@@ -1386,16 +1375,6 @@ class WPI_Web_Invoice_Importer {
             'month' => $invoice[ 'web_invoice_subscription_start_month' ],
             'day' => $invoice[ 'web_invoice_subscription_start_day' ],
             'year' => $invoice[ 'web_invoice_subscription_start_year' ]
-          )
-        ),
-        'meta' => array(
-          'custom_id' => $invoice[ 'web_invoice_custom_invoice_id' ],
-          'discount' => array(
-            1 => array(
-              'name' => '',
-              'type' => 'amount',
-              'amount' => '',
-            )
           )
         ),
         'default_currency_code' => $invoice[ 'web_invoice_currency_code' ]

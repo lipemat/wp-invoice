@@ -1124,17 +1124,19 @@ if ( !function_exists( 'wpi_get_discount' ) ) {
   }
 }
 
-if ( !function_exists( 'wpi_get_adjustments' ) ) {
-  /**
-   * @param string $currency_sign
-   * @return int|string
-   */
-  function wpi_get_adjustments( $currency_sign = '$' ) {
-    global $invoice;
-    if (!isset($invoice['adjustments']))$invoice['adjustments']=0;
-    $adjustments = (float)$invoice['adjustments'] + (float)$invoice['total_payments'];
-    return !empty($adjustments) ? sprintf("$currency_sign%s", wp_invoice_currency_format($adjustments)) : 0;
-  }
+if ( ! function_exists( 'wpi_get_adjustments' ) ) {
+	/**
+	 * @param string $currency_sign
+	 *
+	 * @return int|string
+	 */
+	function wpi_get_adjustments( $currency_sign = '$' ) {
+		global $invoice;
+		$invoice['adjustments'] ??= 0;
+		$invoice['total_payments'] ??= 0;
+		$adjustments = (float) $invoice['adjustments'] + (float) $invoice['total_payments'];
+		return ! empty( $adjustments ) ? sprintf( "$currency_sign%s", wp_invoice_currency_format( $adjustments ) ) : 0;
+	}
 }
 
 if ( !function_exists( 'wpi_get_total_payments' ) ) {

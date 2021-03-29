@@ -6,9 +6,9 @@ class WPI_Invoice {
   
   /**
    * Invoice data
-   * @var type 
+   * @var array
    */
-  var $data;
+  public array $data = [];
   
   /**
    * Has invoice discounts or not
@@ -803,27 +803,17 @@ class WPI_Invoice {
      */
     $this->data['hash'] = md5($this->data['invoice_id']);
 
-    $meta_keys = array();
     //** now add the rest of the array */
-    foreach($this->data as $meta_key => $meta_value) {
-      do_action('wpi_save_meta_' . $meta_key, $meta_value, $this->data);
+	  foreach ( $this->data as $meta_key => $meta_value ) {
+		  do_action( 'wpi_save_meta_' . $meta_key, $meta_value, $this->data );
 
-      if(in_array($meta_key, $non_meta_values)) {
-        continue;
-      }
-      $meta_keys[] = $meta_key;
-
-      update_post_meta($this->data['ID'], $meta_key, $meta_value);
-    }
-
-    //** Remove old postmeta data which is not used anymore */
-    $meta_keys = apply_filters('wpi_custom_meta', $meta_keys);
-    if(!empty($meta_keys)) {
-      $wpdb->query("
-        DELETE FROM {$wpdb->postmeta}
-        WHERE post_id = '{$this->data['ID']}'
-        AND meta_key NOT IN('" . implode( "','", $meta_keys ) . "')");
-    }
+		  if ( \in_array( $meta_key, $non_meta_values, true ) ) {
+			  continue;
+		  }
+		  if ( ! empty( $meta_value ) ) {
+			  update_post_meta( $this->data['ID'], $meta_key, $meta_value );
+		  }
+	  }
 
     return $this->data['ID'];
   }

@@ -816,7 +816,7 @@ input.wpi_no_input {
 }
 .itemized_list .row_quantity,
 .itemized_list .row_amount {
-  width: 40px;
+  width: 60px;
 }
 .itemized_list .row_tax,
 .itemized_list .row_charge_tax {
@@ -923,7 +923,7 @@ input.wpi_no_input {
 .flexible_width_holder {
   clear: left;
   float: left;
-  margin-right: -285px;
+  margin-right: -305px;
   width: 100%;
 }
 .flexible_width_holder_content {

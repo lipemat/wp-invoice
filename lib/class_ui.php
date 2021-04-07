@@ -537,6 +537,7 @@ class WPI_UI {
       if ( !empty( $id ) && !empty( $_REQUEST[ 'action' ] ) ) {
         self::process_invoice_actions( $_REQUEST[ 'action' ], $id );
       }
+      add_filter( 'admin_title', fn() => get_the_title( $id ) );
     }
 
     /** Screen Options */

@@ -587,7 +587,7 @@ class WPI_Invoice {
           }
         } else {
           //** if non percentage, simply calculate the sum of all the discounts */
-          $this->data['total_discount'] = $this->data['total_discount'] + $value['amount'];
+	        $this->data['total_discount'] = ( (float) $this->data['total_discount'] ) + ( (float) $value['amount'] );
         }
       }
       if (isset($percentage_found) && $percentage_found == true) {

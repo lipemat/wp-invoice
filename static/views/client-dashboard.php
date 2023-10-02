@@ -47,7 +47,9 @@ global $invoice, $wpi_settings;
 </head>
 <body ng-controller="InvoiceList" id="client-dashboard">
 
-<header class="pageheader" ng-init="init({wpi_user_id:'<?php echo $_GET['wpi_user_id'] ?>',wpi_token:'<?php echo $_GET['wpi_token'] ?>'})">
+<header
+	class="pageheader"
+	ng-init="init({wpi_user_id:'<?= $_GET['wpi_user_id'] ?? '' ?>',wpi_token:'<?= $_GET['wpi_token'] ?? '' ?>'})">
 
   <div class="container">
 

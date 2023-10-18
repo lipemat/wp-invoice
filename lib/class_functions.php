@@ -2412,7 +2412,7 @@ function wpi_is_full_paid_invoice( $invoice_id ) {
       $paid_amount -= $payment[ 'value' ];
   }
 
-  return $paid_amount >= ( $invoice_obj->data[ 'subtotal' ] - $invoice_obj->data[ 'total_discount' ] );
+	return $paid_amount >= ( $invoice_obj->data['subtotal'] - ( $invoice_obj->data['total_discount'] ?? 0 ) );
 }
 
 /**
@@ -2616,7 +2616,7 @@ function send_notification( $invoice ) {
     $notification_data[ 'creator_name' ] = stripslashes( $creator->display_name );
     $notification_data[ 'creator_id' ] = $creator->ID;
 
-    $notification_data[ 'total' ] = $invoice[ 'subtotal' ] - $invoice[ 'total_discount' ] + $invoice[ 'total_tax' ];
+	  $notification_data['total'] = $invoice['subtotal'] - ( $invoice['total_discount'] ?? 0 ) + ( $invoice['total_tax'] ?? 0 );
     $notification_data[ 'default_currency_code' ] = $invoice[ 'default_currency_code' ];
     $notification_data[ 'total_payments' ] = $invoice[ 'total_payments' ];
 

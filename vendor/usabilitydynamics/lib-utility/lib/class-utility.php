@@ -355,7 +355,7 @@ namespace UsabilityDynamics {
       static public function parse_readme( $readme_file = false ) {
 
         if( !$readme_file ) {
-          $readme_file = untrailingslashit( TEMPLATEPATH ) . '/readme.txt';
+	        $readme_file = untrailingslashit( get_template_directory() ) . '/readme.txt';
         }
 
         $file = @file_get_contents( $readme_file );
@@ -1731,7 +1731,7 @@ namespace UsabilityDynamics {
        * Determine if any requested template exists and return path to it.
        *
        * == Usage ==
-       * The function will search through: STYLESHEETPATH, TEMPLATEPATH, and any custom paths you pass as second argument.
+       * The function will search through: get_stylesheet_directory(), get_template_directory(), and any custom paths you pass as second argument.
        *
        * $best_template = UD\Utility::get_template_part( array(
        *   'template-ideal-match',
@@ -1741,14 +1741,17 @@ namespace UsabilityDynamics {
        * Note: load_template() extracts $wp_query->query_vars into the loaded template, so to add any global variables to the template, add them to
        * $wp_query->query_vars prior to calling this function.
        *
-       * @param mixed $name List of requested templates. Will be return the first found
-       * @param array $path [optional]. Method tries to find template in theme, but also it can be found in given list of pathes.
-       * @param array $opts [optional]. Set of additional params: 
+       * @author  peshkov@UD
+       * @version 1.1
+       *
+       * @param array $opts [optional]. Set of additional params:
        *   - string $instance. Template can depend on instance. For example: facebook, PDF, etc. Uses filter: ud::template_part::{instance}
        *   - boolean $load. if true, rendered HTML will be returned, in other case, only found template's path.
+       *
        * @load boolean [optional]. If true and a template is found, the template will be loaded via load_template() and returned as a string
-       * @author peshkov@UD
-       * @version 1.1
+       *
+       * @param mixed $name List of requested templates. Will be return the first found
+       * @param array $path [optional]. Method tries to find template in theme, but also it can be found in given list of pathes.
        */
       static public function get_template_part( $name, $path = array(), $opts = array() ) {
         $name = (array)$name;

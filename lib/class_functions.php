@@ -947,8 +947,8 @@ class WPI_Functions {
     global $wpi_settings;
     $use_custom_templates = false;
 
-    if ( file_exists( STYLESHEETPATH . "/wpi/" ) ) {
-      return STYLESHEETPATH . "/wpi/";
+	  if ( file_exists( get_stylesheet_directory() . '/wpi/' ) ) {
+		  return get_stylesheet_directory() . '/wpi/';
     }
   }
 

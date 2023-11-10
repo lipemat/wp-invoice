@@ -278,7 +278,7 @@ class WPI_Ajax {
     }
 
     $errors = array();
-    $custom_template_path = STYLESHEETPATH . "/wpi";
+	  $custom_template_path = get_stylesheet_directory() . "/wpi";
     $original_template_path = dirname( __FILE__ ) . "/../static/views";
 
     if ( !is_dir( $custom_template_path ) ) {

@@ -49,7 +49,7 @@ if ( !function_exists('show_itemized_table') ) {
     $currency_symbol = (!empty($wpi_settings['currency']['symbol'][$invoice['default_currency_code']]) ? $wpi_settings['currency']['symbol'][$invoice['default_currency_code']] : "$");
 
     ob_start();
-    if ($wpi_settings['use_custom_templates'] != 'yes' || !file_exists(TEMPLATEPATH . '/wpi/table.php')):
+	  if ( $wpi_settings['use_custom_templates'] != 'yes' || ! file_exists( get_template_directory() . '/wpi/table.php' ) ):
       ?>
       <table id="wp_invoice_itemized_table" class="table table-striped wp_invoice_itemized_table">
         <thead>
@@ -158,7 +158,7 @@ if ( !function_exists('show_itemized_table') ) {
       </table>
     <?php
     else:
-      require_once TEMPLATEPATH . '/wpi/table.php';
+	    require_once get_template_directory() . '/wpi/table.php';
     endif;
     ?>
     <?php

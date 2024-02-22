@@ -8,15 +8,19 @@ class WPI_Settings {
 
   /**
    * Core
-   * @var type 
+   *
+   * @var type
    */
   var $Core;
-  
+
   /**
    * Data
-   * @var type 
+   *
+   * @var type
    */
   var $data;
+
+	public array $options = [];
 
   /**
    * Construct

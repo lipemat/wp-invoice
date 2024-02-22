@@ -12,11 +12,14 @@ abstract class wpi_gateway_base {
   const TEXTAREA_INPUT_TYPE = 'textarea';
   const CHECKBOX_INPUT_TYPE = 'checkbox';
   const RECAPTCHA_INPUT_TYPE = 'recaptcha';
-  
+
   var $options = array();
   var $front_end_fields = array();
 
-  /**
+	public string $type;
+
+
+	/**
    * This function sets the 'type' variable for us, anything that overrides this should
    * call 'parent::__construct'
    * @since 1.0

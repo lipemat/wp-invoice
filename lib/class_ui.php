@@ -29,7 +29,7 @@ class WPI_UI {
 
     $wpi_settings[ 'pages' ][ 'settings' ] = add_submenu_page( 'wpi_main', __( 'Settings', ud_get_wp_invoice()->domain ), __( 'Settings', ud_get_wp_invoice()->domain ), $capability, 'wpi_page_settings', array( 'WPI_UI', 'page_loader' ) );
 
-    // @note Commented this out because results in a DB write on every page load. 
+	  // @note Commented this out because results in a DB write on every page load.
     // WPI_Settings::setOption( 'pages', $wpi_settings[ 'pages' ] );
 
     /* Register meta boxes */
@@ -411,8 +411,8 @@ class WPI_UI {
       'input_name' => 'wpi[new_invoice][user_email]',
       'input_class' => 'input_field',
       'input_id' => 'wp_invoice_userlookup',
-      'input_style' => '', 
-      'input_action' =>'wpi_user_autocomplete_handler' 
+      'input_style'  => '',
+      'input_action' => 'wpi_user_autocomplete_handler',
 
     ) ), EXTR_SKIP );
     ?>
@@ -455,7 +455,7 @@ class WPI_UI {
     if ( file_exists( ud_get_wp_invoice()->path( 'static/styles/wpi-admin.css', 'dir' ) ) ) {
       wp_register_style( 'wpi-admin-css', ud_get_wp_invoice()->path( 'static/styles/wpi-admin.css', 'url' ), array(), WP_INVOICE_VERSION_NUM );
     }
-    
+
     //* Load Page Conditional Script and CSS Files if they exist*/
     if ( file_exists( ud_get_wp_invoice()->path( "static/styles/{$screen_id}.css", 'dir' ) ) ) {
       wp_register_style( 'wpi-this-page-css', ud_get_wp_invoice()->path( "static/styles/{$screen_id}.css", 'url' ), array( 'wpi-admin-css' ), WP_INVOICE_VERSION_NUM );
@@ -960,16 +960,7 @@ class WPI_UI {
    * @author korotkov@ud
    */
   static function wpi_contextual_help( $args = array() ) {
-
-    $defaults = array(
-      'contextual_help' => array()
-    );
-
-    extract( wp_parse_args( $args, $defaults ) );
-
-    //** If method exists add_help_tab in WP_Screen */
-    if ( is_callable( array( 'WP_Screen', 'add_help_tab' ) ) ) {
-
+	  $contextual_help = $args['contextual_help'] ?? [];
       //** Loop through help items and build tabs */
       foreach ( (array) $contextual_help as $help_tab_title => $help ) {
 
@@ -982,8 +973,6 @@ class WPI_UI {
           )
         );
       }
-
-      if ( is_callable( array( 'WP_Screen', 'set_help_sidebar' ) ) ) {
         //** Add help sidebar with More Links */
         get_current_screen()->set_help_sidebar(
           '<p><strong>' . __( 'For more information:', ud_get_wp_invoice()->domain ) . '</strong></p>' .
@@ -991,12 +980,6 @@ class WPI_UI {
           '<p>' . __( '<a href="https://www.usabilitydynamics.com/contact-us/" target="_blank">Contact Us</a>', ud_get_wp_invoice()->domain ) . '</p>' .
           '<p>' . __( '<a href="https://www.usabilitydynamics.com/product/support-service" target="_blank">Premium Support</a>', ud_get_wp_invoice()->domain ) . '</p>'
         );
-      }
-    } else {
-      //** If WP is out of date */
-      global $current_screen;
-      add_contextual_help( $current_screen->id, '<p>' . __( 'Please upgrade Wordpress to the latest version for detailed help.', ud_get_wp_invoice()->domain ) . '</p><p>' . __( 'Or visit <a href="https://www.usabilitydynamics.com/product/wp-invoice" target="_blank">WP-Invoice Help Page</a> on UsabilityDynamics.com', ud_get_wp_invoice()->domain ) . '</p>' );
-    }
   }
 
   /**
@@ -1117,7 +1100,7 @@ class WPI_UI {
   }
 
   /**
-   * 
+   *
    * @global type $post
    * @global type $invoice
    * @global type $invoice_id
@@ -1162,8 +1145,8 @@ class WPI_UI {
     }
 
     $_json_items = json_encode( $invoice_items );
-    
-    // @source https://stackoverflow.com/questions/7741415/strip-null-values-of-json-object
+
+	  // @source https://stackoverflow.com/questions/7741415/strip-null-values-of-json-object
     $_json_items = preg_replace('/,\s*"[^"]+":null|"[^"]+":null,?/', '', $_json_items);
 
     ?>

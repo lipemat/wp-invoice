@@ -262,7 +262,7 @@ class WPI_Settings_page {
 
             <li>
               <?php
-              if (!file_exists($wpi_settings['frontend_template_path'])) {
+              if ( ! file_exists( $wpi_settings['frontend_template_path'] ?? '' ) ) {
                 $no_template_folder = true;
               }
               echo WPI_UI::checkbox("class=use_custom_templates&name=wpi_settings[use_custom_templates]&value=yes&label=" . __("Use custom templates. If checked, WP-Invoice will use templates in the 'wpi' folder in your active theme's folder.", ud_get_wp_invoice()->domain), WPI_Functions::is_true($wpi_settings['use_custom_templates']));
@@ -445,9 +445,9 @@ class WPI_Settings_page {
             <li><?php echo WPI_UI::checkbox("name=hide_page_title&group=wpi_settings&value=true&label=" . __('Hide page heading and navigation link completely.', ud_get_wp_invoice()->domain), $wpi_settings['hide_page_title']); ?></li>
 
             <li><?php echo WPI_UI::checkbox("name=show_business_address&group=wpi_settings|globals&value=true&label=" . __('Show my business address.', ud_get_wp_invoice()->domain), $wpi_settings['globals']['show_business_address']); ?> </li>
-            
-            
-            <li><?php echo WPI_UI::checkbox("name=show_quantities&group=wpi_settings|globals&value=true&label=" . __('Show quantity breakdowns in the itemized list.', ud_get_wp_invoice()->domain), $wpi_settings['globals']['show_quantities']); ?> </li>
+
+
+	          <li><?php echo WPI_UI::checkbox("name=show_quantities&group=wpi_settings|globals&value=true&label=" . __('Show quantity breakdowns in the itemized list.', ud_get_wp_invoice()->domain), $wpi_settings['globals']['show_quantities']); ?> </li>
           </ul></td>
       </tr>
       <tr>

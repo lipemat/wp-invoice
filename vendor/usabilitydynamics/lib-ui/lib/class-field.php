@@ -9,7 +9,7 @@ namespace UsabilityDynamics\UI {
   if( !class_exists( 'UsabilityDynamics\UI\Field' ) ) {
 
     class Field {
-    
+
       public $id = NULL;
       public $name = NULL;
       public $multiple = NULL;
@@ -25,8 +25,19 @@ namespace UsabilityDynamics\UI {
       public $placeholder = NULL;
       public $value = NULL;
       public $extra = NULL;
-      
-      /**
+
+	    public $options;
+
+	    public $map;
+
+	    public $size;
+
+	    public $std;
+		public $js_options;
+		public $url;
+
+
+	    /**
        * Constructor.
        * can not be called directly. Use 'init' method.
        */
@@ -72,8 +83,9 @@ namespace UsabilityDynamics\UI {
 
         return new $class( $params );
       }
-    
-      /**
+
+
+	    /**
        * Add actions
        *
        * @return void
@@ -99,8 +111,8 @@ namespace UsabilityDynamics\UI {
         $id   = $this->id;
 
         $begin = $this->begin_html();
-        
-        // Apply filter to field begin HTML
+
+	      // Apply filter to field begin HTML
         // 1st filter applies to all fields
         // 2nd filter applies to all fields with the same type
         $begin = apply_filters( 'ud::ui::field::begin_html', $begin, $this );
@@ -113,8 +125,8 @@ namespace UsabilityDynamics\UI {
           if ( $this->clone_group ) {
             $group = " clone-group='{$this->clone_group}'";
           }
-          
-          $this->value = (array) $this->value;
+
+	        $this->value = (array) $this->value;
 
           $field_html = '';
 
@@ -260,9 +272,8 @@ namespace UsabilityDynamics\UI {
       static public function normalize_field( $field ) {
         return $field;
       }
-      
+
     }
-    
   }
 
 }

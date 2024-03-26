@@ -156,31 +156,38 @@ class wpi_paypal extends wpi_gateway_base {
     </table>
     <?php
   }
-  
+
   /**
    * Get proper api url
    * @filters wpi_paypal_live_url, wpi_paypal_demo_url
    * @param type $invoice
    * @return type
    */
-  static public function get_api_url( $invoice ) {
-    return 
-      (!empty( $invoice['billing']['wpi_paypal']['settings']['test_mode']['value'] ) && $invoice['billing']['wpi_paypal']['settings']['test_mode']['value'] == 'Y') 
-      ? apply_filters( 'wpi_paypal_demo_url', 'https://www.sandbox.paypal.com/cgi-bin/webscr' )
-      : ( strlen($invoice['billing']['wpi_paypal']['settings']['test_mode']['value'])>1 ? $invoice['billing']['wpi_paypal']['settings']['test_mode']['value'] : apply_filters( 'wpi_paypal_live_url', 'https://www.paypal.com/cgi-bin/webscr' ) );
+   static public function get_api_url( $invoice ) {
+	 if ( ! empty( $invoice['billing']['wpi_paypal']['settings']['test_mode']['value'] ) ) {
+		 if ( 'Y' === $invoice['billing']['wpi_paypal']['settings']['test_mode']['value'] ) {
+			 return apply_filters( 'wpi_paypal_demo_url', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
+		 }
+
+		 if ( strlen($invoice['billing']['wpi_paypal']['settings']['test_mode']['value']) > 1 ) {
+			 return $invoice['billing']['wpi_paypal']['settings']['test_mode']['value'];
+		 }
+	  }
+	  return apply_filters( 'wpi_paypal_live_url', 'https://www.paypal.com/cgi-bin/webscr' );
   }
-  
+
+
   /**
-   * 
+   *
    * @param type $invoice
    * @return type
    */
   static public function get_business( $invoice ) {
     return !empty( $invoice['billing']['wpi_paypal']['settings']['paypal_address']['value'] ) ? $invoice['billing']['wpi_paypal']['settings']['paypal_address']['value'] : '';
   }
-  
+
   /**
-   * 
+   *
    * @param type $invoice
    * @return type
    */
@@ -208,7 +215,7 @@ class wpi_paypal extends wpi_gateway_base {
     update_user_meta($wp_users_id, 'streetaddress', $_REQUEST['address1']);
     update_user_meta($wp_users_id, 'phonenumber', $_REQUEST['night_phone_a'] . '-' . $_REQUEST['night_phone_b'] . '-' . $_REQUEST['night_phone_c']);
     update_user_meta($wp_users_id, 'country', $_REQUEST['country']);
-    
+
     if ( !empty( $_REQUEST['crm_data'] ) ) {
       self::user_meta_updated( $_REQUEST['crm_data'] );
     }
@@ -316,7 +323,7 @@ class wpi_paypal extends wpi_gateway_base {
 
                   case self::RECAPTCHA_INPUT_TYPE:
                     $this->display_recaptcha($field_data);
-                    
+
                     break;
 
                   default:
@@ -339,7 +346,7 @@ class wpi_paypal extends wpi_gateway_base {
      */
     static function server_callback() {
 
-      if (empty($_POST))
+      if (empty($_POST['invoice']))
         die(__('Direct access not allowed', ud_get_wp_invoice()->domain));
 
       $invoice = new WPI_Invoice();
@@ -512,4 +519,3 @@ class wpi_paypal extends wpi_gateway_base {
     }
 
   }
-  

@@ -6,6 +6,103 @@ Handles functions that are related to the user interface
 class WPI_UI {
 
   /**
+   * Displays a dropdown of predefined items.
+   *
+   * @since 3.0
+   */
+  function get_predefined_item_dropdown( $args = '' ) {
+    global $wpi_settings;
+
+    if ( empty( $wpi_settings[ 'predefined_services' ] ) ) {
+      return;
+    }
+
+    //** Extract passed args and load defaults */
+    extract( wp_parse_args( $args, array(
+      'input_name' => 'wpi[itemized_item][]',
+      'input_class' => 'wpi_itemized_item',
+      'input_id' => 'wpi_itemized_item',
+      'input_style' => ''
+    ) ), EXTR_SKIP );
+
+    $empty_rows = array();
+    $return = array();
+    $return[ ] = "<select name='{$input_name}'  class='{$input_class}'  id='{$input_id}' style='{$input_style}' >";
+    $return[ ] = '<option value=""></option>';
+
+    foreach ( $wpi_settings[ 'predefined_services' ] as $itemized_item ) {
+
+      if ( empty( $itemized_item[ 'name' ] ) ) {
+        $empty_rows[ ] = true;
+        continue;
+      }
+
+      $return[ ] = "<option value='" . esc_attr( $itemized_item[ 'name' ] ) . "' tax='{$itemized_item['tax']}' price='{$itemized_item['price']}'>{$itemized_item['name']}</option>";
+    }
+    $return[ ] = '</select>';
+
+    if ( count( $empty_rows ) == count( $wpi_settings[ 'predefined_services' ] ) ) {
+      return false;
+    }
+
+    return implode( '', $return );
+  }
+
+
+  function show_message( $content, $type = "updated fade" ) {
+    if ( $content )
+      echo "<div id=\"message\" class='$type' ><p>" . $content . "</p></div>";
+  }
+
+
+  function error_message( $message, $return = false ) {
+    $content = "<div id=\"message\" class='error' ><p>$message</p></div>";
+    if ( $message != "" ) {
+      if ( $return )
+        return $content;
+      echo $content;
+    }
+  }
+
+
+  function display_user_profile_fields() {
+    global $wpdb, $user_id, $wpi_settings;
+    $profileuser = get_user_to_edit( $user_id );
+
+    include( $wpi_settings[ 'admin' ][ 'ui_path' ] . '/profile_page_content.php' );
+  }
+
+
+  /**
+   *
+   * @global type $post
+   * @global type $invoice
+   * @global type $invoice_id
+   * @global array $wpi_settings
+   * @global type $wpi_invoice_object
+   * @return type
+   */
+  function the_content_shortcode() {
+    global $post, $invoice, $invoice_id, $wpi_settings, $wpi_invoice_object;
+
+    $invoice = $wpi_invoice_object->data;
+
+    include_once( 'class_template_functions.php' );
+
+    ob_start();
+    if ( WPI_Functions::wpi_use_custom_template( 'invoice_page.php' ) ) {
+      include( $wpi_settings[ 'frontend_template_path' ] . 'invoice_page.php' );
+    } else {
+      include( $wpi_settings[ 'default_template_path' ] . 'invoice_page.php' );
+    }
+
+    $result .= ob_get_contents();
+    ob_end_clean();
+    return $result;
+  }
+
+
+  /**
    * Sets up plugin pages and loads their scripts
    *
    * @since 3.0
@@ -18,7 +115,7 @@ class WPI_UI {
     $capability = self::get_capability_by_level( $wpi_settings[ 'user_level' ] );
 
     //$wpi_settings[ 'pages' ][ 'main' ] = add_object_page( __( 'WP-Invoice', ud_get_wp_invoice()->domain ), 'WP-Invoice', $capability, 'wpi_main', null, 'dashicons-money' );
-    $wpi_settings[ 'pages' ][ 'main' ] = add_menu_page( __( 'WP-Invoice', ud_get_wp_invoice()->domain ), __( 'WP-Invoice', ud_get_wp_invoice()->domain ), $capability, 'wpi_main', null, 'dashicons-money', array_key_exists( 30, $menu ) ? null : 30 );
+    $wpi_settings[ 'pages' ][ 'main' ] = add_menu_page( __( 'WP-Invoice', ud_get_wp_invoice()->domain ), __( 'WP-Invoice', ud_get_wp_invoice()->domain ), $capability, 'wpi_main', null, 'dashicons-money', array_key_exists( 30, $menu ?? [] ) ? null : 30 );
 
     $overview_page = new \UsabilityDynamics\UI\Page( 'wpi_main', __( 'View All', ud_get_wp_invoice()->domain ), __( 'View All', ud_get_wp_invoice()->domain ), $capability, 'wpi_main' );
     $wpi_settings[ 'pages' ][ 'main' ] = $overview_page->screen_id;
@@ -54,6 +151,7 @@ class WPI_UI {
     add_filter( 'wpi_overview_filter_statuses', array( __CLASS__, 'add_wpi_overview_filter_statuses' ) );
   }
 
+
   /**
    * @param $_invoice
    */
@@ -61,6 +159,7 @@ class WPI_UI {
     global $wpi_settings;
     echo '<div class="wpi_tos_acceptance"><label><input type="checkbox" value="true" name="accept_terms" />'.sprintf(__('I accept <a href="%s" target="_blank">terms and conditions</a>', ud_get_wp_invoice()->domain), get_permalink($wpi_settings['tos_page_id'])).'</label></div>';
   }
+
 
   /**
    * @param $current
@@ -88,6 +187,7 @@ class WPI_UI {
     return $current;
   }
 
+
   /**
    * @param $current
    * @return mixed
@@ -101,6 +201,7 @@ class WPI_UI {
 
     return $current;
   }
+
 
   /**
    * Overview page
@@ -240,6 +341,7 @@ class WPI_UI {
 
   }
 
+
   /**
    * Make mrtaboxes appear
    */
@@ -277,6 +379,7 @@ class WPI_UI {
     add_meta_box( 'posts_filter', __('Filter'), array( __CLASS__, 'render_overview_filter'), $screen->id, 'side');
   }
 
+
   /**
    *
    */
@@ -288,6 +391,7 @@ class WPI_UI {
       echo "<div class='wrap'><h2>" . __('Error', ud_get_wp_invoice()->domain) . "</h2><p>" . __('Template not found:', ud_get_wp_invoice()->domain) . $file_path . "</p></div>";
     }
   }
+
 
   /**
    * Render overview list UI
@@ -304,6 +408,7 @@ class WPI_UI {
     $list_table->display();
   }
 
+
   /**
    * Render overview filter
    */
@@ -314,6 +419,7 @@ class WPI_UI {
 
     do_action( 'wpi_after_actions' );
   }
+
 
   /**
    * Get capability required for this plugin's menu to be displayed to the user.
@@ -355,48 +461,6 @@ class WPI_UI {
     return $capability;
   }
 
-  /**
-   * Displays a dropdown of predefined items.
-   *
-   * @since 3.0
-   */
-  function get_predefined_item_dropdown( $args = '' ) {
-    global $wpi_settings;
-
-    if ( empty( $wpi_settings[ 'predefined_services' ] ) ) {
-      return;
-    }
-
-    //** Extract passed args and load defaults */
-    extract( wp_parse_args( $args, array(
-      'input_name' => 'wpi[itemized_item][]',
-      'input_class' => 'wpi_itemized_item',
-      'input_id' => 'wpi_itemized_item',
-      'input_style' => ''
-    ) ), EXTR_SKIP );
-
-    $empty_rows = array();
-    $return = array();
-    $return[ ] = "<select name='{$input_name}'  class='{$input_class}'  id='{$input_id}' style='{$input_style}' >";
-    $return[ ] = '<option value=""></option>';
-
-    foreach ( $wpi_settings[ 'predefined_services' ] as $itemized_item ) {
-
-      if ( empty( $itemized_item[ 'name' ] ) ) {
-        $empty_rows[ ] = true;
-        continue;
-      }
-
-      $return[ ] = "<option value='" . esc_attr( $itemized_item[ 'name' ] ) . "' tax='{$itemized_item['tax']}' price='{$itemized_item['price']}'>{$itemized_item['name']}</option>";
-    }
-    $return[ ] = '</select>';
-
-    if ( count( $empty_rows ) == count( $wpi_settings[ 'predefined_services' ] ) ) {
-      return false;
-    }
-
-    return implode( '', $return );
-  }
 
   /**
    * Displays a field for user selection, includes user array in json format, and the jQuery autocomplete() function.
@@ -429,6 +493,7 @@ class WPI_UI {
            id="<?php echo $input_id; ?>" style="<?php echo $input_style; ?>" value="<?php echo isset($_GET['email'])?$_GET['email']:'' ?>"/>
   <?php
   }
+
 
   /**
    * Common pre-header loader function for all WPI pages added in admin_menu()
@@ -477,6 +542,7 @@ class WPI_UI {
     }
   }
 
+
   /**
    * Used for loading back-end UI
    * All back-end pages call this function, which then determines that UI to load below the headers.
@@ -523,6 +589,7 @@ class WPI_UI {
       echo "<div class='wrap'><h2>" . __( 'Error', ud_get_wp_invoice()->domain ) . "</h2><p>" . __( 'Template not found:', ud_get_wp_invoice()->domain ) . $file_path . "</p></div>";
   }
 
+
   /**
    * Hook.
    * Check Request before Manage Page will be loaded.
@@ -557,7 +624,6 @@ class WPI_UI {
   }
 
 
-
   /**
    * Reports Page load handler
    *
@@ -574,6 +640,7 @@ class WPI_UI {
 
     do_action( 'wpi_contextual_help', array( 'contextual_help' => $contextual_help ) );
   }
+
 
   /**
    * Settings Page load handler
@@ -658,6 +725,9 @@ class WPI_UI {
     do_action( 'wpi_contextual_help', array( 'contextual_help' => $contextual_help ) );
   }
 
+  // Displays messages. Can be outputted anywhere, WP JavaScript automatically moves it to the top of the page
+
+
   /**
    * Process actions from Main Page (List of invoices)
    *
@@ -737,6 +807,9 @@ class WPI_UI {
     }
   }
 
+  // Displays error messages. Can be outputted anyways, WP JavaScript automatically moves it to the top of the page
+
+
   /**
    * Can enqueue scripts on specific pages, and print content into head
    *
@@ -807,6 +880,10 @@ class WPI_UI {
     }
   }
 
+  // Displays the extra profile input fields (such as billing address) in the WP User
+  // Called by 'edit_user_profile' and 'show_user_profile'
+
+
   /**
    * Displays users selection screen when viewing the edit invoice page, and no invoice ID is passed
    *
@@ -828,6 +905,7 @@ class WPI_UI {
 
     return $file_path;
   }
+
 
   /**
    * Does our preprocessing for the manage invoice page, adds our meta boxes, and checks invoice data
@@ -909,30 +987,6 @@ class WPI_UI {
     add_meta_box( 'postbox_user_existing', __( 'User Information', ud_get_wp_invoice()->domain ), 'postbox_user_existing', $screen_id, 'side', 'low' );
   }
 
-  // Displays messages. Can be outputted anywhere, WP JavaScript automatically moves it to the top of the page
-  function show_message( $content, $type = "updated fade" ) {
-    if ( $content )
-      echo "<div id=\"message\" class='$type' ><p>" . $content . "</p></div>";
-  }
-
-  // Displays error messages. Can be outputted anyways, WP JavaScript automatically moves it to the top of the page
-  function error_message( $message, $return = false ) {
-    $content = "<div id=\"message\" class='error' ><p>$message</p></div>";
-    if ( $message != "" ) {
-      if ( $return )
-        return $content;
-      echo $content;
-    }
-  }
-
-  // Displays the extra profile input fields (such as billing address) in the WP User
-  // Called by 'edit_user_profile' and 'show_user_profile'
-  function display_user_profile_fields() {
-    global $wpdb, $user_id, $wpi_settings;
-    $profileuser = get_user_to_edit( $user_id );
-
-    include( $wpi_settings[ 'admin' ][ 'ui_path' ] . '/profile_page_content.php' );
-  }
 
   /**
    *  Mostly for printing out pre-loaded styles.
@@ -949,6 +1003,7 @@ class WPI_UI {
     wp_enqueue_style( 'wpi-this-page-css' );
     wp_enqueue_style( 'wpi-ie7' );
   }
+
 
   /**
    * WP-Invoice Contextual Help
@@ -982,6 +1037,7 @@ class WPI_UI {
         );
   }
 
+
   /**
    * Can overwite page title (heading)
    */
@@ -998,6 +1054,7 @@ class WPI_UI {
     }
     return $post_title . ' ' . $sep . ' ';
   }
+
 
   /**
    * Can overwite page title (heading)
@@ -1020,6 +1077,7 @@ class WPI_UI {
     }
     return $title;
   }
+
 
   /**
    * Renders invoice in the content.
@@ -1099,33 +1157,6 @@ class WPI_UI {
     }
   }
 
-  /**
-   *
-   * @global type $post
-   * @global type $invoice
-   * @global type $invoice_id
-   * @global array $wpi_settings
-   * @global type $wpi_invoice_object
-   * @return type
-   */
-  function the_content_shortcode() {
-    global $post, $invoice, $invoice_id, $wpi_settings, $wpi_invoice_object;
-
-    $invoice = $wpi_invoice_object->data;
-
-    include_once( 'class_template_functions.php' );
-
-    ob_start();
-    if ( WPI_Functions::wpi_use_custom_template( 'invoice_page.php' ) ) {
-      include( $wpi_settings[ 'frontend_template_path' ] . 'invoice_page.php' );
-    } else {
-      include( $wpi_settings[ 'default_template_path' ] . 'invoice_page.php' );
-    }
-
-    $result .= ob_get_contents();
-    ob_end_clean();
-    return $result;
-  }
 
   /**
    * Header action

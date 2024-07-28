@@ -81,7 +81,7 @@ namespace UsabilityDynamics\WP {
         //** Determine if plugin/theme requires or recommends another plugin(s) */
         $this->plugins_dependencies();
         // Maybe run install or upgrade processes.
-        $this->maybe_run_upgrade_process();
+        //$this->maybe_run_upgrade_process();
         add_action( 'wp_ajax_ud_bootstrap_dismiss_notice', array( $this, 'ud_bootstrap_dismiss_notice' ) );
       }
 
